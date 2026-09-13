@@ -37,9 +37,9 @@ export default function Home() {
         <Committee />
       </Section>
 
-      <Section id="impact" tone="pitch">
+      {/* <Section id="impact" tone="pitch">
         <Impact />
-      </Section>
+      </Section> */}
 
       {/* --- still to build --- */}
       {[
