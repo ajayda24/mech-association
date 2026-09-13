@@ -1,26 +1,366 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   ME Association — design tokens
+
+   Three materials, taken straight from the chrome MD logo:
+     1. STEEL  — polished chrome. The surface material: grounds, cards, panels.
+     2. BLACK  — depth and contrast panels, never the whole page.
+     3. GOLD   — the single accent.
+
+   Sections alternate between three TONES (see .tone-* below). A tone simply
+   re-points the semantic colour variables, so every utility — text-ink,
+   border-line, surface-steel — adapts automatically inside it.
+   ========================================================================== */
+
+@theme {
+  /* --- black, for depth --- */
+  --color-void: #08090b;
+  --color-pitch: #0e1013;
+
+  /* --- grounds --- */
+  --color-base: #1a1d22;
+  --color-shell: #21252b;
+  --color-surface: #2a2f36;
+  --color-surface-2: #343a43;
+
+  /* --- silver-white ground --- */
+  --color-silver-50: #f7f8fa;
+  --color-silver-100: #eef0f3;
+  --color-silver-200: #e1e4e9;
+  --color-silver-300: #d2d6dc;
+  --color-silver-400: #c2c7ce;
+
+  /* --- steel ramp (sampled off the logo) --- */
+  --color-steel-50: #f4f5f7;
+  --color-steel-100: #e4e6ea;
+  --color-steel-200: #d4d7dc;
+  --color-steel-300: #b6bbc2;
+  --color-steel-400: #9ba1a9;
+  --color-steel-500: #7c838c;
+  --color-steel-600: #5f666e;
+  --color-steel-700: #474d55;
+  --color-steel-800: #343a43;
+  --color-steel-900: #23272d;
+
+  /* --- gold accent --- */
+  --color-gold-100: #f9ecc8;
+  --color-gold-200: #f0d18a;
+  --color-gold-300: #e4c06a;
+  --color-gold-400: #d9af4e;
+  --color-gold-500: #c49a3c;
+  --color-gold-600: #a8802a;
+  --color-gold-700: #85641f;
+
+  /* --- semantic (dark-tone defaults; tones below re-point these) --- */
+  --color-ink: #eceef1;
+  --color-ink-muted: #a8aeb6;
+  --color-ink-faint: #6d747c;
+  --color-line: #363c45;
+  --color-line-strong: #4a515a;
+
+  --font-display: "General Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "General Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-shell: 28px;
+}
+
+/* ==========================================================================
+   base
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: auto; /* Lenis owns scrolling */
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-base);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+::selection {
+  background: var(--color-gold-400);
+  color: #000;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-steel-700);
+  border-radius: 999px;
+  border: 3px solid var(--color-base);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-steel-600);
+}
+
+/* ==========================================================================
+   TONES — alternating section grounds
+   ========================================================================== */
+
+/* --- gunmetal (default) --- */
+.tone-steel {
+  background-color: var(--color-base);
+  background-image:
+    radial-gradient(
+      120% 80% at 50% -10%,
+      rgba(217, 175, 78, 0.1) 0%,
+      transparent 62%
+    ),
+    radial-gradient(
+      70% 50% at 88% 12%,
+      rgba(180, 195, 215, 0.08) 0%,
+      transparent 60%
+    ),
+    linear-gradient(180deg, #22262d 0%, #1a1d22 55%, #16191e 100%);
+  color: var(--color-ink);
+}
+
+/* --- deep black contrast --- */
+.tone-pitch {
+  --color-line: #24282e;
+  --color-line-strong: #363c45;
+  background-color: var(--color-pitch);
+  background-image:
+    radial-gradient(
+      90% 60% at 50% 0%,
+      rgba(217, 175, 78, 0.12) 0%,
+      transparent 58%
+    ),
+    linear-gradient(180deg, #14171c 0%, #0b0d10 100%);
+  color: var(--color-ink);
+}
+
+/* --- brushed silver-white --- */
+.tone-silver {
+  --color-ink: #14171b;
+  --color-ink-muted: #4d545c;
+  --color-ink-faint: #858c95;
+  --color-line: rgba(20, 23, 27, 0.14);
+  --color-line-strong: rgba(20, 23, 27, 0.28);
+  /* Flip the top of the steel ramp so body copy still reads on light metal. */
+  --color-steel-200: #5f666e;
+  --color-steel-300: #4d545c;
+  --color-steel-400: #3d434a;
+  --color-steel-500: #2f353b;
+  --color-steel-600: #23272d;
+
+  color: var(--color-ink);
+  background-color: var(--color-silver-300);
+  background-image:
+    radial-gradient(
+      85% 55% at 50% 0%,
+      rgba(217, 175, 78, 0.22) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      60% 45% at 12% 100%,
+      rgba(150, 170, 195, 0.3) 0%,
+      transparent 62%
+    ),
+    linear-gradient(180deg, #f2f4f7 0%, #dfe3e8 45%, #c8cdd4 100%);
+}
+
+/* Fine brushed-metal grain over the silver ground. */
+.tone-silver::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.55) 0px,
+    rgba(255, 255, 255, 0.55) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+}
+
+/* ==========================================================================
+   material utilities
+   ========================================================================== */
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+@utility text-chrome {
+  background-image: linear-gradient(
+    170deg,
+    #ffffff 0%,
+    #d4d7dc 18%,
+    #7c838c 38%,
+    #f4f5f7 52%,
+    #b6bbc2 66%,
+    #5f666e 84%,
+    #d4d7dc 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Chrome reads as dark polished steel on a light ground. */
+.tone-silver .text-chrome {
+  background-image: linear-gradient(
+    170deg,
+    #2d333a 0%,
+    #6b737c 16%,
+    #171a1e 36%,
+    #8f97a1 52%,
+    #22262c 70%,
+    #5c646d 86%,
+    #14171b 100%
+  );
+}
+
+@utility text-gilt {
+  background-image: linear-gradient(
+    170deg,
+    #f9ecc8 0%,
+    #d9af4e 30%,
+    #85641f 52%,
+    #f0d18a 70%,
+    #a8802a 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.tone-silver .text-gilt {
+  background-image: linear-gradient(
+    170deg,
+    #b8891f 0%,
+    #8a6414 30%,
+    #d9af4e 52%,
+    #6d4e10 74%,
+    #a8802a 100%
+  );
+}
+
+/* Machined steel panel — brushed body with a specular top edge. */
+@utility surface-steel {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0) 38%
+    ),
+    linear-gradient(155deg, #333941 0%, #262b32 48%, #1d2128 100%);
+  border: 1px solid var(--color-line);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 24px 60px -30px rgba(0, 0, 0, 0.9);
+  border-radius: 20px;
+}
+
+.tone-silver .surface-steel {
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.2) 40%
+    ),
+    linear-gradient(155deg, #ffffff 0%, #eaedf1 50%, #d7dbe1 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 24px 50px -28px rgba(20, 23, 27, 0.45);
+}
+
+@utility surface-pitch {
+  background-image: linear-gradient(160deg, #14171b 0%, #0b0d10 100%);
+  border: 1px solid var(--color-steel-900);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+}
+
+@utility surface-gilt {
+  background-image: linear-gradient(
+    160deg,
+    #f9ecc8 0%,
+    #d9af4e 42%,
+    #a8802a 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 20px 50px -26px rgba(217, 175, 78, 0.55);
+  border-radius: 20px;
+  color: #14100a;
+}
+
+@utility rule-fade {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-line-strong) 15%,
+    var(--color-line-strong) 85%,
+    transparent
+  );
+}
+
+@utility shell-gutter {
+  padding-inline: clamp(1.25rem, 5vw, 5rem);
+}
+
+@utility texture-knurl {
+  background-image:
+    linear-gradient(to right, var(--color-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Warm bloom behind a focal element. */
+@utility glow-gold {
+  background: radial-gradient(
+    circle at center,
+    rgba(217, 175, 78, 0.35) 0%,
+    rgba(217, 175, 78, 0.08) 40%,
+    transparent 70%
+  );
+}
+
+/* ==========================================================================
+   motion safety
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
