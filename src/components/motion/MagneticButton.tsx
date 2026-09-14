@@ -9,6 +9,12 @@ type Props = {
   className?: string;
   /** Pull radius as a fraction of the element's half-size. */
   strength?: number;
+  /**
+   * Applied to the inner label span. Needed when the button's contents lay
+   * themselves out — the span is the flex item, so `w-full` has to land here
+   * rather than on the anchor for `justify-between` to have room to work.
+   */
+  labelClassName?: string;
   onClick?: (e: React.MouseEvent) => void;
 };
 
@@ -21,6 +27,7 @@ export function MagneticButton({
   href = "#",
   className = "",
   strength = 0.32,
+  labelClassName = "",
   onClick,
 }: Props) {
   const ref = useRef<HTMLAnchorElement>(null);
@@ -65,7 +72,7 @@ export function MagneticButton({
       onMouseLeave={reset}
       className={`inline-flex items-center justify-center ${className}`}
     >
-      <span ref={label} className="inline-block">
+      <span ref={label} className={`inline-block ${labelClassName}`}>
         {children}
       </span>
     </a>

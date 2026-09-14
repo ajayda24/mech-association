@@ -29,6 +29,9 @@ export function Section({
   return (
     <section
       id={id}
+      // Read by the fixed nav, which has to re-colour itself against whatever
+      // it happens to be floating over.
+      data-tone={tone}
       className={`tone-${tone} relative ${clip ? "overflow-hidden" : ""} ${className}`}
     >
       {children}

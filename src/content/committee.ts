@@ -1,10 +1,14 @@
 /**
- * Committee / office bearers. PLACEHOLDER names and roles.
+ * Committee / office bearers.
  *
- * PHOTOS: drop each portrait in `public/committee/` and set `photo` to the
- * path, e.g. `photo: "/committee/arun-k.jpg"`. Portraits look best at 3:4
- * (e.g. 900x1200). Leave `photo` as `null` and the card renders a machined
- * initials plate instead, so the grid never breaks while photos are pending.
+ * PHOTOS live in `public/committee/` and are referenced from the site root —
+ * `/committee/x.jpeg`, NOT `/public/committee/x.jpeg`. Nearly all of them are
+ * 3:4, which is what the card is shaped to, so they display with little or no
+ * cropping.
+ *
+ * NAMES are the one thing still to fill in: only the faculty president was
+ * supplied. Set `photo` to null for anyone without a portrait and the card
+ * renders a machined initials plate instead, so the grid never breaks.
  */
 
 export type Member = {
@@ -36,16 +40,17 @@ export const committee = {
       note: "Department staff who oversee the association",
       members: [
         {
-          name: "Dr. Placeholder Name",
-          role: "Head of Department",
+          name: "Anil Jacob",
+          role: "President",
           year: "Faculty",
-          photo: null,
+          photo: "/committee/president.jpeg",
         },
         {
-          name: "Prof. Placeholder Name",
+          /** TODO: real name. */
+          name: "Christo Jose",
           role: "Staff Advisor",
           year: "Faculty",
-          photo: null,
+          photo: "/committee/staffAdvisor.jpeg",
         },
       ],
     },
@@ -55,52 +60,34 @@ export const committee = {
       note: "The elected student committee for this session",
       members: [
         {
-          name: "Placeholder Name",
-          role: "President",
-          year: "Final Year",
-          photo: null,
+          name: "Hadi Muhammed K",
+          role: "Media Head",
+          year: "Student",
+          photo: "/committee/mediaHead.jpeg",
         },
         {
-          name: "Placeholder Name",
-          role: "Vice President",
-          year: "Third Year",
-          photo: null,
+          name: "Muhammed Shanif V",
+          role: "Joint Secretary",
+          year: "Student",
+          photo: "/committee/joinSecretary.jpeg",
         },
         {
-          name: "Placeholder Name",
-          role: "Secretary",
-          year: "Third Year",
-          photo: null,
+          name: "Rifa Fathima",
+          role: "Department Secretary",
+          year: "Student",
+          photo: "/committee/deptSecreatry.jpeg",
         },
         {
-          name: "Placeholder Name",
-          role: "Treasurer",
-          year: "Third Year",
-          photo: null,
+          name: "Krishnapriya P M",
+          role: "Tech Lead",
+          year: "Student",
+          photo: "/committee/techLead.jpeg",
         },
         {
-          name: "Placeholder Name",
-          role: "Technical Head",
-          year: "Final Year",
-          photo: null,
-        },
-        {
-          name: "Placeholder Name",
-          role: "Events Head",
-          year: "Third Year",
-          photo: null,
-        },
-        {
-          name: "Placeholder Name",
-          role: "Alumni Relations Head",
-          year: "Final Year",
-          photo: null,
-        },
-        {
-          name: "Placeholder Name",
-          role: "Design & Media Head",
-          year: "Second Year",
-          photo: null,
+          name: "Madhujith K M",
+          role: "Program Facilitator",
+          year: "Student",
+          photo: "/committee/programFacilitator.jpeg",
         },
       ],
     },
@@ -110,28 +97,28 @@ export const committee = {
       note: "One voice from each of the four years",
       members: [
         {
-          name: "Placeholder Name",
+          name: "Gautham Krishna B",
           role: "Class Representative",
           year: "First Year",
-          photo: null,
+          photo: "/committee/1stYearRep.jpeg",
         },
         {
-          name: "Placeholder Name",
+          name: "Gautham Krishna M S",
           role: "Class Representative",
           year: "Second Year",
-          photo: null,
+          photo: "/committee/2ndYearRep.jpeg",
         },
         {
-          name: "Placeholder Name",
+          name: "Adithya P",
           role: "Class Representative",
           year: "Third Year",
-          photo: null,
+          photo: "/committee/3rdYearRep.jpeg",
         },
         {
-          name: "Placeholder Name",
+          name: "Arun Mannanchery",
           role: "Class Representative",
           year: "Final Year",
-          photo: null,
+          photo: "/committee/4thYearRep.jpeg",
         },
       ],
     },

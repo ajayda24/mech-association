@@ -6,10 +6,11 @@
  */
 
 export const site = {
-  /** TODO: replace with the real association name. */
-  name: "ME Association",
-  shortName: "MEA",
-  longName: "Mechanical Engineering Association",
+  name: "Royal Mech",
+  shortName: "Royal Mech",
+  longName: "Royal Mech — Mechanical Engineering Association",
+  /** Sits under the wordmark in the nav and on the loading screen. */
+  sub: "Mechanical Engineering",
   /** TODO: replace with the real college / department name. */
   college: "Department of Mechanical Engineering",
   tagline: "Built by the batch, for the batch.",

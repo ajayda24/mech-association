@@ -28,7 +28,7 @@ export function ScrollWords({ text, className = "", highlight = [] }: Props) {
       );
       gsap.fromTo(
         words,
-        { opacity: 0.12, filter: "blur(3px)" },
+        { opacity: 0.32, filter: "blur(2px)" },
         {
           opacity: 1,
           filter: "blur(0px)",
@@ -56,6 +56,7 @@ export function ScrollWords({ text, className = "", highlight = [] }: Props) {
           <span
             key={i}
             data-word
+            data-progressive
             className={`inline-block ${isHot ? "text-gilt" : ""}`}
           >
             {w}

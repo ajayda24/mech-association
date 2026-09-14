@@ -13,6 +13,13 @@ export function Nav() {
   const lenisRef = useLenisRef();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("");
+  /**
+   * The nav is fixed, so it floats over sections of every tone while its own
+   * colours stay put — on a silver section the chrome wordmark was rendering
+   * light-on-light and disappearing. This tracks whichever section is under
+   * the bar and swaps the nav's text context to match.
+   */
+  const [onLight, setOnLight] = useState(false);
 
   const go = useCallback(
     (href: string) => (event: React.MouseEvent) => {
@@ -55,6 +62,41 @@ export function Nav() {
     return () => observer.disconnect();
   }, []);
 
+  // Sample the tone of whatever section sits under the bar.
+  useEffect(() => {
+    const sections = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-tone]"),
+    );
+    if (!sections.length) return;
+
+    /** Vertical line, in px from the top, that the nav occupies. */
+    const SAMPLE_Y = 44;
+    let raf = 0;
+
+    const sample = () => {
+      raf = 0;
+      const hit = sections.find((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top <= SAMPLE_Y && r.bottom > SAMPLE_Y;
+      });
+      const light = hit?.dataset.tone === "silver";
+      setOnLight((prev) => (prev === light ? prev : light));
+    };
+
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(sample);
+    };
+
+    sample();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, []);
+
   // Lock Lenis while the mobile sheet is open.
   useEffect(() => {
     const lenis = lenisRef.current;
@@ -66,10 +108,11 @@ export function Nav() {
   return (
     <>
       {/*
-        Two different navs in one. On phones it's a self-contained floating bar
-        with its own surface, so it stays legible as content scrolls beneath —
-        previously it was transparent and collided with whatever passed under
-        it. From `lg` the bar dissolves and the centred pill group takes over.
+        The bar keeps its own surface at EVERY breakpoint. It used to go
+        transparent from `lg`, which left it sitting directly on whatever
+        scrolled under it — and since it colours itself from the section's
+        tone, a dark photo inside a light section gave dark text on dark.
+        Its own background removes the dependency entirely.
         Top padding respects the safe-area inset so it clears notches and the
         status bar rather than hugging the screen edge.
       */}
@@ -77,11 +120,18 @@ export function Nav() {
         className="pointer-events-none shell-gutter fixed inset-x-0 top-0 z-50"
         style={{ paddingTop: "max(1.35rem, env(safe-area-inset-top))" }}
       >
-        <nav className="border-line bg-surface/65 pointer-events-auto mx-auto flex max-w-[1400px] items-center justify-between gap-3 rounded-full border py-2 pr-2 pl-3 backdrop-blur-xl lg:border-transparent lg:bg-transparent lg:p-0 lg:pt-3 lg:backdrop-blur-none">
+        <nav
+          className={`border-line pointer-events-auto mx-auto flex max-w-[1400px] items-center justify-between gap-3 rounded-full border py-2 pr-2 pl-3 backdrop-blur-xl transition-colors duration-500 ${
+            onLight ? "ctx-on-light bg-white/70" : "ctx-on-dark bg-surface/65"
+          }`}
+        >
           <Logo size={30} />
 
           {/* Centered pill group — the reference's signature nav treatment. */}
-          <ul className="border-line bg-surface/70 absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border p-1.5 backdrop-blur-xl lg:flex">
+          {/* Keeps its own dark surface at every tone, so it keeps the dark
+              context too — inheriting the nav's light context here would put
+              dark link text on a dark pill. */}
+          <ul className="border-line bg-surface/92 ctx-on-dark absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border p-1.5 backdrop-blur-xl lg:flex">
             {navLinks.map((link) => {
               const isActive = active === link.href;
               return (
@@ -92,7 +142,7 @@ export function Nav() {
                     className={`relative block rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors duration-300 ${
                       isActive
                         ? "text-gold-200"
-                        : "text-steel-400 hover:text-ink"
+                        : "text-steel-300 hover:text-ink"
                     }`}
                   >
                     {isActive && (
@@ -124,7 +174,7 @@ export function Nav() {
             <a
               href={navCta.href}
               onClick={go(navCta.href)}
-              className="from-gold-200 to-gold-500 hover:shadow-gold-500/25 rounded-full bg-gradient-to-b px-3.5 py-2 text-xs font-semibold text-black transition-shadow duration-300 hover:shadow-[0_0_30px_-4px] sm:px-4 sm:text-[13px]"
+              className="btn-gold rounded-full px-3.5 py-2 text-xs font-semibold transition-shadow duration-300 hover:shadow-[0_0_30px_-4px_rgba(217,175,78,0.5)] sm:px-4 sm:text-[13px]"
             >
               {/* full label needs room; phones get the short form */}
               <span className="hidden sm:inline">{navCta.label}</span>

@@ -97,7 +97,7 @@ export function Marquee({
             className="text-steel-500 flex shrink-0 items-center text-xs font-medium tracking-[0.16em] whitespace-nowrap uppercase sm:text-sm sm:tracking-[0.18em]"
           >
             {item}
-            <span className="text-gold-600 mx-5 text-[10px] sm:mx-7">
+            <span className="text-gold-500 mx-5 text-[10px] sm:mx-7">
               {separator}
             </span>
           </span>

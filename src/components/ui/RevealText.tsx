@@ -13,8 +13,19 @@ type Props = {
   delay?: number;
   /** Animate once when scrolled into view instead of immediately on mount. */
   onView?: boolean;
+  /**
+   * Only meaningful when `onView` is false: hold in the hidden state until
+   * this flips true. Used to stop the hero playing out behind the loading
+   * screen.
+   */
+  play?: boolean;
 };
 
+/*
+ * Each letter rises out of a mask. The mask clips only its BOTTOM edge — see
+ * the class on the wrapper span — because a full `overflow: hidden` also cuts
+ * the tops of tall glyphs when line-height is 1.
+ */
 const word: Variants = {
   hidden: { y: "110%", rotate: 3 },
   show: {
@@ -35,6 +46,7 @@ export function RevealText({
   stagger = 0.045,
   delay = 0,
   onView = true,
+  play = true,
 }: Props) {
   const container: Variants = {
     hidden: {},
@@ -43,7 +55,7 @@ export function RevealText({
 
   const animateProps = onView
     ? { whileInView: "show" as const, viewport: { once: true, amount: 0.4 } }
-    : { animate: "show" as const };
+    : { animate: play ? ("show" as const) : ("hidden" as const) };
 
   return (
     <Tag className={className}>
@@ -60,7 +72,7 @@ export function RevealText({
               {words.map((w, wi) => (
                 <span
                   key={wi}
-                  className={`inline-block overflow-hidden pb-[0.14em] align-bottom ${
+                  className={`inline-block [clip-path:inset(-0.5em_-0.08em_0_-0.08em)] pb-[0.14em] align-bottom ${
                     wi < words.length - 1 ? "mr-[0.26em]" : ""
                   }`}
                 >

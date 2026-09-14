@@ -23,7 +23,7 @@ export function Footer() {
               <a
                 href={s.href}
                 aria-label={s.label}
-                className="text-steel-600 hover:text-gold-300 text-xs font-medium tracking-[0.18em] uppercase transition-colors duration-300"
+                className="text-steel-400 hover:text-gold-300 text-xs font-medium tracking-[0.18em] uppercase transition-colors duration-300"
               >
                 {s.label}
               </a>

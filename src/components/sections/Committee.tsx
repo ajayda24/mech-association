@@ -74,16 +74,10 @@ export function Committee() {
               <span className="bg-line-strong ml-auto hidden h-px flex-1 sm:block" />
             </div>
 
-            <ul
-              className={`grid gap-3 sm:gap-5 ${
-                group.key === "faculty"
-                  ? "sm:grid-cols-2"
-                  : "grid-cols-2 lg:grid-cols-4"
-              }`}
-            >
+            <ul className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
               {group.members.map((m, i) => (
                 <li key={`${group.key}-${i}`} data-member>
-                  <MemberCard member={m} featured={group.key === "faculty"} />
+                  <MemberCard member={m} />
                 </li>
               ))}
             </ul>
@@ -94,15 +88,9 @@ export function Committee() {
   );
 }
 
-function MemberCard({
-  member,
-  featured,
-}: {
-  member: Member;
-  featured?: boolean;
-}) {
+function MemberCard({ member }: { member: Member }) {
   return (
-    <TiltCard max={featured ? 6 : 10} className="h-full">
+    <TiltCard max={9} className="h-full">
       <article className="surface-steel group relative h-full overflow-hidden">
         {/* specular highlight that follows the cursor */}
         <span
@@ -115,18 +103,20 @@ function MemberCard({
         />
 
         {/* portrait */}
-        <div
-          className={`relative overflow-hidden ${
-            featured ? "aspect-[16/10]" : "aspect-[3/4]"
-          }`}
-        >
+        {/*
+          3:4 for every card, because that is what the portraits actually are —
+          8 of the 11 are exactly 0.75. The faculty cards used to be 16/10,
+          which threw away about two thirds of a portrait's height and left the
+          face blown up and cropped.
+        */}
+        <div className="relative aspect-[3/4] overflow-hidden">
           {member.photo ? (
             <Image
               src={member.photo}
               alt={member.name}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-cover grayscale-[0.7] contrast-[1.05] transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06] group-hover:grayscale-0"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover object-[50%_28%] grayscale-[0.55] contrast-[1.03] transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.04] group-hover:grayscale-0"
             />
           ) : (
             <PlatePlaceholder name={member.name} />
@@ -177,7 +167,14 @@ function MemberCard({
 /** Machined plate stand-in shown until a portrait is supplied. */
 function PlatePlaceholder({ name }: { name: string }) {
   return (
-    <div className="surface-pitch texture-knurl absolute inset-0 grid place-items-center rounded-none">
+    /*
+     * `surface-pitch` and `texture-knurl` both set `background-image`, so
+     * putting them on one element meant the knurl grid replaced the dark fill
+     * entirely and the plate rendered light — with light chrome initials on
+     * it. Each background gets its own layer.
+     */
+    <div className="surface-pitch absolute inset-0 grid place-items-center rounded-none">
+      <span aria-hidden className="texture-knurl absolute inset-0" />
       <div className="glow-gold absolute inset-0 opacity-40" />
       <Cog
         className="absolute -right-8 -bottom-8 h-40 w-40 opacity-[0.08]"

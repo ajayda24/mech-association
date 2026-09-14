@@ -1,9 +1,24 @@
 import type { Metadata, Viewport } from "next";
+import { Cinzel } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/providers/SmoothScroll";
+import { Preloader } from "@/components/layout/Preloader";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { site } from "@/content/site";
+
+/**
+ * Brand wordmark face, self-hosted by next/font: the file is served from our
+ * own origin, preloaded, and given a stable CSS variable. That removes a
+ * third-party round trip and the layout shift a late-arriving display font
+ * would cause on the loading screen.
+ */
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-cinzel",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -23,12 +38,12 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={cinzel.variable}>
       <head>
         {/*
-          General Sans — the reference's geometric grotesque. Served from
-          Fontshare's CDN for now; self-host via next/font/local before launch
-          to drop the extra DNS round trip.
+          General Sans for UI and body copy, from Fontshare. The brand face
+          (Cinzel) is self-hosted by next/font above. Self-host General Sans via
+          next/font/local before launch to drop this last round trip too.
         */}
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link
@@ -37,18 +52,20 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <SmoothScroll>
-          <Nav />
-          {/*
+        <Preloader>
+          <SmoothScroll>
+            <Nav />
+            {/*
             Sections run full-bleed and carry their own tone, so the page reads
             as alternating bands of material. No clipping wrapper here: an
             overflow ancestor would fight ScrollTrigger's position:fixed pins.
           */}
-          <div id="top">
-            <main>{children}</main>
-            <Footer />
-          </div>
-        </SmoothScroll>
+            <div id="top">
+              <main>{children}</main>
+              <Footer />
+            </div>
+          </SmoothScroll>
+        </Preloader>
       </body>
     </html>
   );
