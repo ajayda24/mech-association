@@ -13,7 +13,7 @@ import { site } from "@/content/site";
  * and held there waiting on assets, which made the number visibly stall and
  * then jump.
  */
-const COUNT_MS = 2600;
+const COUNT_MS = 1600;
 
 /**
  * Floor on how long the wordmark gets after its font lands. Normally the sweep
@@ -368,24 +368,28 @@ function Lockup({ play }: { play: boolean }) {
       >
         <Image
           /*
-           * 1400px WebP with alpha, trimmed to the artwork: 218KB against the
-           * 2.1MB source. This is the first byte a visitor waits on, so
-           * shipping the full-size PNG would make the loading screen the very
-           * thing it exists to hide.
+           * WebP with alpha, trimmed to the artwork's own bounding box: 216KB
+           * against the 1.2MB source PNG. This is the first byte a visitor
+           * waits on, so shipping the raw PNG would make the loading screen
+           * the very thing it exists to hide.
            *
-           * The `-alpha` suffix is deliberate. Next's image optimiser caches
-           * by URL, so re-exporting this file under its previous name kept
-           * serving the earlier opaque build and the transparency never
-           * appeared. A new filename is also what prevents a CDN doing the
-           * same thing in production.
+           * width/height are the real intrinsic size after the trim, so the
+           * box Next reserves matches the art and nothing shifts when it
+           * lands.
+           *
+           * The version suffix is deliberate. Next's image optimiser caches by
+           * URL, so re-exporting under a name already served keeps handing
+           * back the previous build — that is exactly how an earlier opaque
+           * export survived being replaced. A new filename also stops a CDN
+           * doing the same thing in production.
            */
-          src="/preloader-lockup-alpha.webp"
+          src="/preloader-lockup-v2.webp"
           alt="Royal Mech"
-          width={1400}
-          height={919}
+          width={1309}
+          height={990}
           priority
-          sizes="(max-width: 768px) 86vw, 32rem"
-          className="h-auto w-full select-none"
+          sizes="288px"
+          className="mx-auto max-w-60 sm:max-w-72 select-none"
         />
       </motion.div>
     </div>
