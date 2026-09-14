@@ -16,11 +16,26 @@ import { site } from "@/content/site";
 const COUNT_MS = 1600;
 
 /**
- * Floor on how long the wordmark gets after its font lands. Normally the sweep
- * above is the binding constraint; this only matters if the font is slow, so
- * the reveal is never cut off mid-way.
+ * Crown entrance, in seconds, relative to the moment the lockup starts playing.
+ *
+ * These live up here next to the other timings on purpose. The counter runs
+ * from MOUNT while the lockup runs from FONTS-READY, which are two different
+ * clocks — so a crown tuned against the counter gets cut off mid-descent on any
+ * load where the font resolves late. WORDMARK_MIN_MS below is derived from
+ * these numbers rather than written by hand, which is what keeps the doors from
+ * opening on a crown still in the air.
  */
-const WORDMARK_MIN_MS = 750;
+const CROWN_IN = { delay: 0.2, duration: 0.7 } as const;
+
+/** The instant the crown touches the R — the overshoot keyframe. */
+const CROWN_CONTACT_S = CROWN_IN.delay + CROWN_IN.duration * 0.62;
+
+/**
+ * Floor on how long the wordmark gets after its font lands: long enough for the
+ * crown to land and be seen, plus a beat to read it. Normally the counter sweep
+ * is the binding constraint and this never applies.
+ */
+const WORDMARK_MIN_MS = (CROWN_IN.delay + CROWN_IN.duration) * 1000 + 320;
 
 /** Shop-floor flavour for the status line, stepped as the bar fills. */
 const STATUS = ["Calibrating", "Aligning", "Torquing", "Ready"] as const;
@@ -338,60 +353,141 @@ export function Preloader({ children }: { children: ReactNode }) {
 /**
  * ── The lockup ───────────────────────────────────────────────────────────────
  *
- * The supplied render (`/preloader-reference.png`), used directly so the
- * artwork is exactly the reference rather than an approximation of it.
+ * The crown and the wordmark are now SEPARATE layers, because separate source
+ * art was supplied for each. The previous build could not do this: the only
+ * asset was a flat composite, and lifting the crown out of it left a smear
+ * across the R underneath that no inpainting hid, so the whole lockup had to
+ * animate as one object. With real cutouts the crown can fly.
  *
- * The crown is NOT a separate layer. It overlaps the R in the render, and
- * lifting it out leaves a smear across the letter underneath that no amount of
- * inpainting hides — so the whole lockup animates as one object instead.
- *
- * The asset is the background-removed export, trimmed to its own content and
- * carrying a real alpha channel. That replaces the screen-blend-plus-mask
- * workaround the opaque version needed: with true transparency the metal sits
- * on the panel directly, and the rings behind it show through the gaps in the
- * letterforms rather than through an approximation of them.
+ * The two files are not registered to each other — each is trimmed to its own
+ * bounding box — so the rest pose is expressed as percentages of the WORDMARK
+ * box, which is the element both are positioned inside. Percentages rather
+ * than pixels means the assembly holds at every width without a second set of
+ * numbers for mobile.
  */
+
+/** Crown rest pose, as percentages of the wordmark box it caps. */
+const CROWN = { left: -5, top: -35, width: 42, angle: -24 } as const;
+
 function Lockup({ play }: { play: boolean }) {
+  const reduce = useReducedMotion();
+
   return (
-    <div className="relative w-[86vw] md:w-[32rem]">
+    /*
+     * The top margin is the crown's headroom. It reaches roughly 60% of the
+     * wordmark's height ABOVE the wordmark, which without this runs straight
+     * into the department label sitting above the lockup.
+     */
+    <div className="relative mt-[4.5rem] w-[86vw] sm:mt-24 md:w-[32rem]">
       {/* warm pool behind the metal, matching the render's own bloom */}
       <span
         aria-hidden
         className="glow-gold absolute -inset-x-10 -inset-y-6 opacity-55"
       />
 
-      <motion.div
-        className="relative"
-        initial={{ opacity: 0, scale: 1.06, y: 14 }}
-        animate={play ? { opacity: 1, scale: 1, y: 0 } : {}}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <Image
-          /*
-           * WebP with alpha, trimmed to the artwork's own bounding box: 216KB
-           * against the 1.2MB source PNG. This is the first byte a visitor
-           * waits on, so shipping the raw PNG would make the loading screen
-           * the very thing it exists to hide.
-           *
-           * width/height are the real intrinsic size after the trim, so the
-           * box Next reserves matches the art and nothing shifts when it
-           * lands.
-           *
-           * The version suffix is deliberate. Next's image optimiser caches by
-           * URL, so re-exporting under a name already served keeps handing
-           * back the previous build — that is exactly how an earlier opaque
-           * export survived being replaced. A new filename also stops a CDN
-           * doing the same thing in production.
-           */
-          src="/preloader-lockup-v2.webp"
-          alt="Royal Mech"
-          width={1309}
-          height={990}
-          priority
-          sizes="288px"
-          className="mx-auto max-w-60 sm:max-w-72 select-none"
-        />
-      </motion.div>
+      {/*
+       * This box IS the wordmark's box, and it is what the crown is positioned
+       * against. Sizing lives here rather than on the image so that the crown's
+       * percentages have a stable reference.
+       */}
+      <div className="relative mx-auto w-full max-w-60 select-none sm:max-w-72">
+        <motion.div
+          initial={{ opacity: 0, scale: 1.04, y: 12 }}
+          animate={play ? { opacity: 1, scale: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Image
+            /*
+             * Trimmed to its own content and re-encoded: 164KB from a 1.7MB
+             * PNG. This is the first byte a visitor waits on, so shipping the
+             * raw PNG would make the loading screen the very thing it exists
+             * to hide. width/height are the real post-trim intrinsics, so the
+             * box Next reserves matches the art and nothing shifts on load.
+             */
+            src="/wordmark-v1.webp"
+            alt="Royal Mech"
+            width={1441}
+            height={658}
+            priority
+            sizes="288px"
+            className="h-auto w-full"
+          />
+        </motion.div>
+
+        {/*
+         * The crown falls from above the panel, swings past its resting angle
+         * and settles onto the R — the overshoot in the keyframes is what
+         * gives it weight, rather than gliding into place.
+         */}
+        <motion.div
+          aria-hidden
+          className="absolute"
+          style={{
+            left: `${CROWN.left}%`,
+            top: `${CROWN.top}%`,
+            width: `${CROWN.width}%`,
+            transformOrigin: "52% 88%",
+          }}
+          initial={
+            reduce
+              ? { opacity: 0, rotate: CROWN.angle }
+              : { opacity: 0, y: "-320%", rotate: -62, scale: 1.1 }
+          }
+          animate={
+            play
+              ? reduce
+                ? { opacity: 1, rotate: CROWN.angle }
+                : {
+                    opacity: [0, 1, 1, 1],
+                    y: ["-320%", "6%", "-2%", "0%"],
+                    rotate: [-62, -17, -27, CROWN.angle],
+                    scale: [1.1, 1, 1.01, 1],
+                  }
+              : {}
+          }
+          transition={
+            reduce
+              ? { duration: 0.4, delay: CROWN_IN.delay }
+              : {
+                  duration: CROWN_IN.duration,
+                  delay: CROWN_IN.delay,
+                  times: [0, 0.62, 0.82, 1],
+                  ease: [0.3, 0.9, 0.3, 1],
+                }
+          }
+        >
+          <Image
+            src="/crown-v1.webp"
+            alt=""
+            width={1442}
+            height={946}
+            priority
+            sizes="130px"
+            className="h-auto max-w-16 sm:max-w-20 drop-shadow-[0_10px_18px_rgba(0,0,0,0.55)]"
+          />
+        </motion.div>
+
+        {/* gold bloom at the moment of contact */}
+        {!reduce && (
+          <motion.span
+            aria-hidden
+            className="glow-gold pointer-events-none absolute"
+            style={{
+              left: `${CROWN.left - 6}%`,
+              top: `${CROWN.top + 20}%`,
+              width: `${CROWN.width + 12}%`,
+              aspectRatio: "1",
+            }}
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={play ? { opacity: [0, 0.75, 0], scale: [0.5, 1.25, 1.5] } : {}}
+            transition={{
+              duration: 0.7,
+              delay: CROWN_CONTACT_S,
+              ease: "easeOut",
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
