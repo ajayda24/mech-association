@@ -31,10 +31,11 @@ export function DevCredit() {
       >
         <span className="flex flex-col leading-tight">
           {/*
-            The name is the part that can go: on a phone the link alone still
-            carries the credit, and a full second line would crowd the bar.
+            Shown at every width. The tracking loosens on `sm` rather than the
+            type growing, so the pill stays narrow on a phone while the line
+            still reads as the same machined label used on the loading screen.
           */}
-          <span className="text-steel-400 hidden text-[9px] tracking-[0.28em] uppercase sm:block">
+          <span className="text-steel-400 text-[8px] tracking-[0.18em] uppercase sm:text-[9px] sm:tracking-[0.28em]">
             Developed by Ajay Daniel Trevor
           </span>
           <span className="text-gold-300 group-hover:text-gold-100 text-[10px] tracking-[0.18em] transition-colors duration-300 sm:text-[11px]">
