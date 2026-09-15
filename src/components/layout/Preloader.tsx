@@ -335,22 +335,39 @@ export function Preloader({ children }: { children: ReactNode }) {
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.5 }}
-                className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1 px-6 text-center"
+                className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-2.5 px-6"
                 style={{
                   paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
                 }}
               >
-                <span className="text-steel-400 text-[9px] tracking-[0.28em] uppercase sm:text-[10px]">
-                  Developed by Ajay Daniel Trevor
+                <div className="flex flex-col items-end gap-0.5 text-right">
+                  <span className="text-steel-400 text-[9px] tracking-[0.28em] uppercase sm:text-[10px]">
+                    Developed by Ajay Daniel Trevor
+                  </span>
+                  <a
+                    href="https://ajaydanieltrevor.com"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="text-gold-300 hover:text-gold-100 pointer-events-auto text-[10px] tracking-[0.18em] transition-colors sm:text-[11px]"
+                  >
+                    ajaydanieltrevor.com
+                  </a>
+                </div>
+
+                {/*
+                  Pre-cropped to a square and shipped at 160px — four times the
+                  displayed size at most, so it stays sharp on retina while
+                  costing 5KB on the one screen a visitor is already waiting on.
+                */}
+                <span className="ring-gold-300/40 relative h-7 w-7 shrink-0 overflow-hidden rounded-full ring-1 sm:h-8 sm:w-8">
+                  <Image
+                    src="/developer.webp"
+                    alt="Ajay Daniel Trevor"
+                    fill
+                    sizes="32px"
+                    className="object-cover"
+                  />
                 </span>
-                <a
-                  href="https://ajaydanieltrevor.com"
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-gold-300 hover:text-gold-100 pointer-events-auto text-[10px] tracking-[0.18em] transition-colors sm:text-[11px]"
-                >
-                  ajaydanieltrevor.com
-                </a>
               </motion.div>
             </motion.div>
           </motion.div>
