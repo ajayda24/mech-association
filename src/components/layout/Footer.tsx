@@ -1,8 +1,14 @@
 import { navLinks, navSecondary, site } from "@/content/site";
 
+/*
+ * The bottom padding is deliberately larger than the top: the fixed developer
+ * credit floats over the bottom-right of the viewport, and at the end of the
+ * scroll that is exactly where the copyright line sits. The gap keeps them off
+ * each other.
+ */
 export function Footer() {
   return (
-    <footer className="tone-pitch shell-gutter relative border-line border-t py-10">
+    <footer className="tone-pitch shell-gutter relative border-line border-t pt-10 pb-24 md:pb-20">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-8 md:flex-row md:items-center md:justify-between">
         <ul className="flex flex-wrap items-center gap-x-10 gap-y-3">
           {[...navLinks, navSecondary].map((link) => (

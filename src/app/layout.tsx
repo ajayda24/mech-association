@@ -5,6 +5,7 @@ import { SmoothScroll } from "@/components/providers/SmoothScroll";
 import { Preloader } from "@/components/layout/Preloader";
 import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
+import { DevCredit } from "@/components/layout/DevCredit";
 import { site } from "@/content/site";
 
 /**
@@ -64,6 +65,12 @@ export default function RootLayout({
               <main>{children}</main>
               <Footer />
             </div>
+            {/*
+              Sits outside #top and after the footer: it is fixed to the
+              viewport rather than to the document, so it stays with the reader
+              the whole way down and back up.
+            */}
+            <DevCredit />
           </SmoothScroll>
         </Preloader>
       </body>

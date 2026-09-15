@@ -12,8 +12,12 @@ import { site } from "@/content/site";
  * screen is up. One continuous linear tween: the earlier version climbed to 92
  * and held there waiting on assets, which made the number visibly stall and
  * then jump.
+ *
+ * This is the binding constraint on screen time — WORDMARK_MIN_MS below is the
+ * only other floor and sits well under it — so changing this number is what
+ * changes how long the panel is up.
  */
-const COUNT_MS = 1600;
+const COUNT_MS = 2600;
 
 /**
  * Crown entrance, in seconds, relative to the moment the lockup starts playing.
