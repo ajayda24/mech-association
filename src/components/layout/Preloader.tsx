@@ -324,6 +324,34 @@ export function Preloader({ children }: { children: ReactNode }) {
                   </span>
                 </motion.div>
               </div>
+
+              {/*
+                Credit line, pinned to the bottom of the panel rather than
+                placed after the progress block: the lockup column is centred
+                in the viewport, and appending to it would drag that centre up.
+                The safe-area inset keeps it clear of the home indicator.
+              */}
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.5 }}
+                className="absolute inset-x-0 bottom-0 flex flex-col items-center gap-1 px-6 text-center"
+                style={{
+                  paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))",
+                }}
+              >
+                <span className="text-steel-400 text-[9px] tracking-[0.28em] uppercase sm:text-[10px]">
+                  Developed by Ajay Daniel Trevor
+                </span>
+                <a
+                  href="https://ajaydanieltrevor.com"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="text-gold-300 hover:text-gold-100 pointer-events-auto text-[10px] tracking-[0.18em] transition-colors sm:text-[11px]"
+                >
+                  ajaydanieltrevor.com
+                </a>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
@@ -479,7 +507,9 @@ function Lockup({ play }: { play: boolean }) {
               aspectRatio: "1",
             }}
             initial={{ opacity: 0, scale: 0.5 }}
-            animate={play ? { opacity: [0, 0.75, 0], scale: [0.5, 1.25, 1.5] } : {}}
+            animate={
+              play ? { opacity: [0, 0.75, 0], scale: [0.5, 1.25, 1.5] } : {}
+            }
             transition={{
               duration: 0.7,
               delay: CROWN_CONTACT_S,
