@@ -31,12 +31,12 @@ export function DevCredit() {
       >
         <span className="flex flex-col leading-tight">
           {/*
-            Shown at every width. The tracking loosens on `sm` rather than the
-            type growing, so the pill stays narrow on a phone while the line
-            still reads as the same machined label used on the loading screen.
+            Just the label — the domain below it already carries the name, so
+            spelling it out here only widened the pill and said it twice. The
+            full credit still appears on the loading screen.
           */}
           <span className="text-steel-400 text-[8px] tracking-[0.18em] uppercase sm:text-[9px] sm:tracking-[0.28em]">
-            Developed by Ajay Daniel Trevor
+            Developed by
           </span>
           <span className="text-gold-300 group-hover:text-gold-100 text-[10px] tracking-[0.18em] transition-colors duration-300 sm:text-[11px]">
             ajaydanieltrevor.com
