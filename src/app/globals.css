@@ -489,6 +489,17 @@ html.lenis body {
   );
 }
 
+/* Slow drift for floating hero art. */
+@keyframes float-drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1deg);
+  }
+}
+
 /* ==========================================================================
    motion safety
    ========================================================================== */

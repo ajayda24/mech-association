@@ -7,9 +7,31 @@ import { useGsapContext } from "@/lib/useGsap";
 type Props = {
   text: string;
   className?: string;
-  /** Words matching these get the gold treatment. Case-insensitive. */
+  /**
+   * Words or phrases that get the gold treatment. A multi-word phrase only
+   * lights up where the whole run appears in order. Case- and
+   * punctuation-insensitive.
+   */
   highlight?: readonly string[];
 };
+
+const clean = (w: string) => w.replace(/[^a-z0-9]/gi, "").toLowerCase();
+
+/** Indices of the words covered by any highlight phrase. */
+function hotIndices(words: string[], highlight: readonly string[]) {
+  const cleaned = words.map(clean);
+  const hot = new Set<number>();
+  for (const phrase of highlight) {
+    const parts = phrase.split(/\s+/).map(clean).filter(Boolean);
+    if (!parts.length) continue;
+    for (let i = 0; i + parts.length <= cleaned.length; i++) {
+      if (parts.every((p, j) => cleaned[i + j] === p)) {
+        parts.forEach((_, j) => hot.add(i + j));
+      }
+    }
+  }
+  return hot;
+}
 
 /**
  * Each word lights up as the paragraph passes through the viewport — the
@@ -18,7 +40,13 @@ type Props = {
  */
 export function ScrollWords({ text, className = "", highlight = [] }: Props) {
   const root = useRef<HTMLParagraphElement>(null);
-  const lower = highlight.map((h) => h.toLowerCase());
+  // A "\n" in the text starts a new line; "\n" tokens render as <br />.
+  const words = text
+    .trim()
+    .split(/( *\n *| +)/)
+    .filter((t) => t.trim() !== "" || t.includes("\n"))
+    .map((t) => (t.includes("\n") ? "\n" : t));
+  const hot = hotIndices(words, highlight);
 
   useGsapContext(
     () => {
@@ -49,9 +77,9 @@ export function ScrollWords({ text, className = "", highlight = [] }: Props) {
 
   return (
     <p ref={root} className={className}>
-      {text.split(" ").map((w, i) => {
-        const clean = w.replace(/[^a-z0-9]/gi, "").toLowerCase();
-        const isHot = lower.includes(clean);
+      {words.map((w, i) => {
+        if (w === "\n") return <br key={i} />;
+        const isHot = hot.has(i);
         return (
           <span
             key={i}

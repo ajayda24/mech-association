@@ -18,7 +18,7 @@ export const hero = {
     { k: "Alumni", v: "1450+" },
   ],
   index: "01",
-  primary: { label: "Join the Association", href: "#join" },
+  primary: { label: "Support Hub", href: "#support" },
   secondary: { label: "See Upcoming Events", href: "#events" },
   /** Runs in the ticker under the hero. */
   ticker: [

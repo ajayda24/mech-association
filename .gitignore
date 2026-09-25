@@ -43,3 +43,6 @@ next-env.d.ts
 # visual contrast check artefacts
 .contrast/
 .shots/
+
+# ...but the template belongs in the repo
+!.env.example

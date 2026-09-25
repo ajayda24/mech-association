@@ -1,6 +1,8 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useLenisRef } from "@/components/providers/SmoothScroll";
 import { Logo } from "@/components/layout/Logo";
@@ -9,8 +11,44 @@ import { navCta, navLinks, navSecondary } from "@/content/site";
 /** Height of the floating nav, used as the scroll-to offset. */
 const NAV_OFFSET = -96;
 
+/** `#section` scrolls within the landing page; anything else is a route. */
+const isAnchor = (href: string) => href.startsWith("#");
+
+/**
+ * One nav item. Renders a Next `Link` for anything that navigates so route
+ * changes stay client-side, and a plain anchor for same-page scrolling, which
+ * Lenis handles itself.
+ */
+function NavItem({
+  href,
+  onClick,
+  className,
+  children,
+  ...rest
+}: {
+  href: string;
+  onClick: (e: React.MouseEvent) => void;
+  className?: string;
+  children: React.ReactNode;
+} & React.AriaAttributes) {
+  if (href.startsWith("#")) {
+    return (
+      <a href={href} onClick={onClick} className={className} {...rest}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} onClick={onClick} className={className} {...rest}>
+      {children}
+    </Link>
+  );
+}
+
 export function Nav() {
   const lenisRef = useLenisRef();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState<string>("");
   /**
@@ -21,10 +59,26 @@ export function Nav() {
    */
   const [onLight, setOnLight] = useState(false);
 
+  /**
+   * Where an item actually points FROM THE CURRENT PAGE.
+   *
+   * `#about` is a scroll target on the landing page, but from /alumni there is
+   * no such element to scroll to — it has to become a real navigation to
+   * `/#about` instead, or the click does nothing at all.
+   */
+  const resolve = useCallback(
+    (href: string) => (isAnchor(href) && !isHome ? `/${href}` : href),
+    [isHome],
+  );
+
   const go = useCallback(
     (href: string) => (event: React.MouseEvent) => {
-      event.preventDefault();
       setOpen(false);
+      // Routes, and anchors pointing at another page, are left to Next's
+      // router: intercepting them would cancel the navigation.
+      if (!isAnchor(href) || !isHome) return;
+
+      event.preventDefault();
       const target = document.querySelector(href);
       if (!target) return;
       const lenis = lenisRef.current;
@@ -37,12 +91,16 @@ export function Nav() {
         target.scrollIntoView({ behavior: "smooth" });
       }
     },
-    [lenisRef],
+    [lenisRef, isHome],
   );
 
   // Highlight whichever section currently owns the upper third of the viewport.
   useEffect(() => {
-    const ids = navLinks.map((l) => l.href.slice(1));
+    // Anchors only. A route link like "/alumni" has no section on this page,
+    // and slicing it would look for an element with id "alumni" on every page.
+    const ids = navLinks
+      .filter((l) => isAnchor(l.href))
+      .map((l) => l.href.slice(1));
     const sections = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => Boolean(el));
@@ -133,11 +191,13 @@ export function Nav() {
               dark link text on a dark pill. */}
           <ul className="border-line bg-surface/92 ctx-on-dark absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border p-1.5 backdrop-blur-xl lg:flex">
             {navLinks.map((link) => {
-              const isActive = active === link.href;
+              const isActive = isAnchor(link.href)
+                ? isHome && active === link.href
+                : pathname === link.href;
               return (
                 <li key={link.href} className="relative">
-                  <a
-                    href={link.href}
+                  <NavItem
+                    href={resolve(link.href)}
                     onClick={go(link.href)}
                     className={`relative block rounded-full px-4 py-1.5 text-[13px] font-medium transition-colors duration-300 ${
                       isActive
@@ -157,29 +217,29 @@ export function Nav() {
                       />
                     )}
                     {link.label}
-                  </a>
+                  </NavItem>
                 </li>
               );
             })}
           </ul>
 
           <div className="flex shrink-0 items-center gap-2">
-            <a
-              href={navSecondary.href}
+            <NavItem
+              href={resolve(navSecondary.href)}
               onClick={go(navSecondary.href)}
               className="text-steel-400 hover:text-ink hidden px-3 text-[13px] font-medium transition-colors duration-300 sm:block"
             >
               {navSecondary.label}
-            </a>
-            <a
-              href={navCta.href}
+            </NavItem>
+            <NavItem
+              href={resolve(navCta.href)}
               onClick={go(navCta.href)}
               className="btn-gold rounded-full px-3.5 py-2 text-xs font-semibold transition-shadow duration-300 hover:shadow-[0_0_30px_-4px_rgba(217,175,78,0.5)] sm:px-4 sm:text-[13px]"
             >
               {/* full label needs room; phones get the short form */}
               <span className="hidden sm:inline">{navCta.label}</span>
               <span className="sm:hidden">Join</span>
-            </a>
+            </NavItem>
             <button
               type="button"
               onClick={() => setOpen((v) => !v)}
@@ -225,13 +285,13 @@ export function Nav() {
                     ease: [0.16, 1, 0.3, 1],
                   }}
                 >
-                  <a
-                    href={link.href}
+                  <NavItem
+                    href={resolve(link.href)}
                     onClick={go(link.href)}
                     className="text-display text-ink hover:text-gold-200 block py-2 text-[clamp(2.25rem,11vw,3.5rem)] transition-colors duration-300"
                   >
                     {link.label}
-                  </a>
+                  </NavItem>
                 </motion.li>
               ))}
             </ul>

@@ -11,8 +11,10 @@ export const site = {
   longName: "Royal Mech — Mechanical Engineering Association",
   /** Sits under the wordmark in the nav and on the loading screen. */
   sub: "Mechanical Engineering",
-  /** TODO: replace with the real college / department name. */
-  college: "Department of Mechanical Engineering",
+  /** Full college name — footer, edge rail and anywhere else it's spelled out. */
+  college: "Institute of Engineering & Technology, Calicut University",
+  /** Short form, used only under the department name in the hero. */
+  collegeShort: "IET Calicut University",
   tagline: "Built by the batch, for the batch.",
   description:
     "The student association of the Mechanical Engineering department — four years of students running the workshops, the build teams, the symposium and the alumni network.",
@@ -20,20 +22,23 @@ export const site = {
   social: [
     { label: "Instagram", href: "#" },
     { label: "LinkedIn", href: "#" },
-    { label: "YouTube", href: "#" },
   ],
 } as const;
 
-/** Single-page site: every nav item is an in-page anchor. */
+/**
+ * Nav items. `#foo` scrolls within the landing page; anything starting with
+ * `/` is a real route and is navigated to instead. Nav reads the shape of the
+ * href to decide, so adding a page here needs no change there.
+ */
 export const navLinks = [
   { label: "About", href: "#about" },
-  { label: "Domains", href: "#domains" },
   { label: "Committee", href: "#committee" },
   { label: "Events", href: "#events" },
-  { label: "Alumni", href: "#alumni" },
+  { label: "Notes", href: "/notes" },
+  { label: "Alumni", href: "/alumni" },
 ] as const;
 
-export const navCta = { label: "Join the Association", href: "#join" } as const;
+export const navCta = { label: "Support Hub", href: "#support" } as const;
 export const navSecondary = { label: "Impact", href: "#impact" } as const;
 
 /** The four undergraduate years the association spans. */

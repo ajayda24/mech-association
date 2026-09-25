@@ -10,33 +10,33 @@ export const about = {
     "Three wings, four years, one department. Every wing is run by students and handed over to the next batch each year.",
   steps: [
     {
-      key: "technical",
-      label: "Technical Wing",
+      key: "study",
+      label: "Study Hub",
       blurb:
-        "Build teams, the open workshop and the competition squads. Runs the semester project cycle from proposal to demo day.",
+        "Notes, question papers and peer study sessions for every semester. Seniors who've cleared the subject walk juniors through it.",
       bullets: [
-        "Go-kart and Baja build teams",
-        "CNC, welding and casting shop hours",
-        "CAD / CAE certification drives",
+        "Semester-wise notes and question banks",
+        "Peer tutoring before every series exam",
+        "Lab manuals and viva preparation",
       ],
       metrics: [
-        { label: "Active build teams", value: 12, suffix: "" },
-        { label: "Workshop hours / week", value: 58, suffix: "h" },
+        { label: "Subjects covered", value: 40, suffix: "+" },
+        { label: "Study sessions / sem", value: 30, suffix: "" },
       ],
     },
     {
-      key: "events",
-      label: "Events Wing",
+      key: "help",
+      label: "Help Desk",
       blurb:
-        "The annual symposium, hands-on workshops, industry talks and plant visits. Everything with a date on it lands here.",
+        "One place to ask — academics, registrations, scholarships or hostel queries. A student volunteer gets back to you, or finds someone who can.",
       bullets: [
-        "Annual technical symposium",
-        "Industry and plant visits",
-        "Guest lectures and paper contests",
+        "Registration and exam form guidance",
+        "Scholarship and certificate help",
+        "First-year onboarding support",
       ],
       metrics: [
-        { label: "Events per year", value: 26, suffix: "" },
-        { label: "Student footfall", value: 2200, suffix: "+" },
+        { label: "Queries resolved", value: 500, suffix: "+" },
+        { label: "Avg. response time", value: 24, suffix: "h" },
       ],
     },
     {

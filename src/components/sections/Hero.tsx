@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { gsap } from "@/lib/gsap";
 import { useGsapContext } from "@/lib/useGsap";
@@ -100,12 +101,17 @@ export function Hero() {
               pieces of text and wrapped each of them on a phone. */}
           <motion.div
             {...fade(0.05)}
-            className="text-ink-faint flex items-center gap-3 text-[9px] font-medium tracking-[0.24em] whitespace-nowrap uppercase sm:gap-5 sm:text-[10px]"
+            className="text-ink-faint flex items-start gap-3 text-[9px] leading-[1.6] font-medium tracking-[0.24em] whitespace-nowrap uppercase sm:gap-5 sm:text-[10px]"
           >
+            {/* Rules sit on the first line, so the college name hangs
+                beneath the department name rather than centring the strip. */}
             <span className="text-gold-300">{hero.index}</span>
-            <span className="bg-line-strong h-px w-6 shrink-0 sm:w-12" />
-            <span>{hero.eyebrow}</span>
-            <span className="bg-line-strong ml-auto hidden h-px flex-1 lg:block" />
+            <span className="bg-line-strong mt-[0.8em] h-px w-6 shrink-0 sm:w-12" />
+            <span className="flex flex-col gap-1.5">
+              <span>{hero.eyebrow}</span>
+              <span className="text-silver-300">{site.collegeShort}</span>
+            </span>
+            <span className="bg-line-strong mt-[0.8em] ml-auto hidden h-px flex-1 lg:block" />
           </motion.div>
 
           {/* ---------- headline ---------- */}
@@ -169,6 +175,29 @@ export function Hero() {
             >
               {site.tagline} {site.description}
             </motion.p>
+
+            {/* "The 'OG' Department" tag. Absolute at every width so it takes
+                no space; small enough to sit in the gap right of "We Build". */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 12 }}
+              animate={ready ? { opacity: 1, scale: 1, y: 0 } : {}}
+              transition={{
+                duration: 1.1,
+                delay: 0.5,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+              className="pointer-events-none absolute top-0 right-0 w-[clamp(4.5rem,12vw,10rem)] sm:top-2"
+            >
+              <Image
+                src="/og-department.webp"
+                alt="The 'OG' Department"
+                width={1400}
+                height={809}
+                sizes="(min-width: 1024px) 160px, 120px"
+                priority
+                className="h-auto w-full animate-[float-drift_7s_ease-in-out_infinite] drop-shadow-[0_8px_18px_rgba(0,0,0,0.6)]"
+              />
+            </motion.div>
           </div>
 
           {/* ---------- spec table ---------- */}

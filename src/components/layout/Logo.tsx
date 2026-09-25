@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { site } from "@/content/site";
 
 /**
@@ -23,8 +24,10 @@ export function Logo({
   showWordmark?: boolean;
 }) {
   return (
-    <a
-      href="#top"
+    // Root-relative: the logo sits in the fixed nav on every route, so on
+    // /alumni a bare "#top" would point at an element that is not there.
+    <Link
+      href="/#top"
       aria-label={`${site.name} — back to top`}
       className={`group inline-flex items-center gap-2.5 ${className}`}
     >
@@ -55,6 +58,6 @@ export function Logo({
           </span>
         </span>
       )}
-    </a>
+    </Link>
   );
 }

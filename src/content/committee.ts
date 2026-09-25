@@ -125,13 +125,10 @@ export const committee = {
   ] satisfies CommitteeGroup[],
 } as const;
 
-/** Fallback plate initials when a photo hasn't been supplied yet. */
-export function initialsOf(name: string) {
-  return name
-    .replace(/^(Dr\.|Prof\.|Mr\.|Ms\.|Mrs\.)\s*/i, "")
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((p) => p[0]?.toUpperCase() ?? "")
-    .join("");
-}
+/**
+ * Fallback plate initials when a photo hasn't been supplied yet.
+ *
+ * Lives in `@/lib/initials` now that the alumni directory needs the same
+ * behaviour; re-exported here so existing imports keep working.
+ */
+export { initialsOf } from "@/lib/initials";

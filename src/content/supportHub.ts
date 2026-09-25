@@ -1,26 +1,33 @@
-/** The 01 / 02 / 03 focus cards. PLACEHOLDER copy. */
-export const domains = {
-  heading: ["Three Domains,", "One Discipline"],
+/**
+ * Support Hub — one card per help category, each with the coordinator
+ * students should call. PLACEHOLDER names and numbers; swap the values,
+ * not the shape. `phone` is dialled as-is, so keep it in +91 form.
+ */
+export const supportHub = {
+  heading: ["Support Hub,", "One Call Away"],
   items: [
     {
       no: "01",
-      kicker: "Design & Analysis",
-      title: "Model, Simulate, Validate",
-      body: "CAD to CAE — machine elements, linkages and load paths, taken from sketch to FEA before a single part is cut.",
+      kicker: "Academics & Exams",
+      title: "Classes, Marks, Exams",
+      body: "Timetables, internals, attendance shortfalls, revaluation and exam registration — the first call for anything on the academic side.",
+      coordinator: { name: "Coordinator Name", phone: "+91 98765 43210" },
       tone: "steel",
     },
     {
       no: "02",
-      kicker: "Thermal & Fluids",
-      title: "Burn, Flow, Exchange",
-      body: "IC engines, heat exchangers, refrigeration and CFD. The energy side of the department, from combustion to cooling towers.",
+      kicker: "Sports & Arts",
+      title: "Play, Perform, Represent",
+      body: "Team trials, university meets, arts fest entries and duty leave for events. Reach out before the deadline, not after.",
+      coordinator: { name: "Coordinator Name", phone: "+91 98765 43211" },
       tone: "gilt",
     },
     {
       no: "03",
-      kicker: "Manufacturing",
-      title: "Cut, Join, Finish",
-      body: "Lathe and mill to CNC, welding, casting and additive. Where the drawing finally becomes a part you can hold.",
+      kicker: "GATE & Placements",
+      title: "Prepare, Apply, Land",
+      body: "GATE guidance, study material, placement drives, resumes and mock interviews — help for whatever comes after the degree.",
+      coordinator: { name: "Coordinator Name", phone: "+91 98765 43212" },
       tone: "pitch",
     },
   ],

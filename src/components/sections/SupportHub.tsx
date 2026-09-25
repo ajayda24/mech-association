@@ -6,7 +6,7 @@ import { gsap } from "@/lib/gsap";
 import { useGsapContext } from "@/lib/useGsap";
 import { RevealText } from "@/components/ui/RevealText";
 import { Cog } from "@/components/visuals/Hardware";
-import { domains } from "@/content/domains";
+import { supportHub } from "@/content/supportHub";
 
 const toneClass: Record<string, string> = {
   steel: "surface-steel",
@@ -15,15 +15,15 @@ const toneClass: Record<string, string> = {
 };
 
 /**
- * The 01 / 02 / 03 cards. Each column drifts at its own rate so the row keeps
+ * The three Support Hub cards. Each column drifts at its own rate so the row keeps
  * reshuffling as you pass it — the staggered-height treatment in the reference.
  */
-export function Domains() {
+export function SupportHub() {
   const root = useRef<HTMLDivElement>(null);
 
   useGsapContext(
     () => {
-      const cards = gsap.utils.toArray<HTMLElement>("[data-domain-card]");
+      const cards = gsap.utils.toArray<HTMLElement>("[data-support-card]");
 
       cards.forEach((cardEl, i) => {
         // Entrance: rise + unrotate, cascading left to right.
@@ -71,15 +71,15 @@ export function Domains() {
       <div className="relative mx-auto max-w-[1400px]">
         <RevealText
           as="h2"
-          lines={domains.heading}
+          lines={supportHub.heading}
           className="text-display text-chrome mb-10 text-center text-[clamp(2rem,8vw,4.6rem)] sm:mb-[clamp(3rem,8vh,6rem)]"
         />
 
         <div className="grid items-start gap-6 md:grid-cols-3">
-          {domains.items.map((d, i) => (
+          {supportHub.items.map((d, i) => (
             <div
               key={d.no}
-              data-domain-card
+              data-support-card
               className={`${i === 1 ? "md:-mt-14" : ""} ${
                 i === 2 ? "md:mt-10" : ""
               }`}
@@ -130,17 +130,39 @@ export function Domains() {
                   {d.body}
                 </p>
 
-                <span
-                  className={`mt-8 flex items-center gap-2 text-xs font-medium tracking-[0.16em] uppercase ${
-                    d.tone === "gilt" ? "text-black/70" : "text-steel-400"
+                {/* the coordinator — the whole row dials them */}
+                <a
+                  href={`tel:${d.coordinator.phone.replace(/\s+/g, "")}`}
+                  className={`mt-8 block border-t pt-5 ${
+                    d.tone === "gilt" ? "border-black/15" : "border-white/10"
                   }`}
                 >
-                  {d.no}
-                  <span className="bg-current/30 h-px flex-1 origin-left scale-x-100 transition-transform duration-500 group-hover:scale-x-[0.7]" />
-                  <span className="transition-transform duration-500 group-hover:translate-x-1.5">
-                    →
+                  <span
+                    className={`block text-[11px] font-medium tracking-[0.2em] uppercase ${
+                      d.tone === "gilt" ? "text-black/55" : "text-steel-400"
+                    }`}
+                  >
+                    Coordinator
                   </span>
-                </span>
+                  <span
+                    className={`mt-1.5 block text-base font-medium ${
+                      d.tone === "gilt" ? "text-black" : "text-ink"
+                    }`}
+                  >
+                    {d.coordinator.name}
+                  </span>
+                  <span
+                    className={`mt-3 flex items-center gap-2 text-xs font-medium tracking-[0.16em] ${
+                      d.tone === "gilt" ? "text-black/70" : "text-gold-400"
+                    }`}
+                  >
+                    {d.coordinator.phone}
+                    <span className="bg-current/30 h-px flex-1 origin-left scale-x-100 transition-transform duration-500 group-hover:scale-x-[0.7]" />
+                    <span className="transition-transform duration-500 group-hover:translate-x-1.5">
+                      →
+                    </span>
+                  </span>
+                </a>
               </motion.article>
             </div>
           ))}
