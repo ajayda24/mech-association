@@ -60,22 +60,16 @@ export const committee = {
       note: "The elected student committee for this session",
       members: [
         {
-          name: "Hadi Muhammed K",
-          role: "Media Head",
+          name: "Rifa Fathima",
+          role: "Department Secretary",
           year: "Student",
-          photo: "/committee/mediaHead.jpeg",
+          photo: "/committee/deptSecreatry.jpeg",
         },
         {
           name: "Muhammed Shanif V",
           role: "Joint Secretary",
           year: "Student",
           photo: "/committee/joinSecretary.jpeg",
-        },
-        {
-          name: "Rifa Fathima",
-          role: "Department Secretary",
-          year: "Student",
-          photo: "/committee/deptSecreatry.jpeg",
         },
         {
           name: "Krishnapriya P M",
@@ -88,6 +82,12 @@ export const committee = {
           role: "Program Facilitator",
           year: "Student",
           photo: "/committee/programFacilitator.jpeg",
+        },
+        {
+          name: "Hadi Muhammed K",
+          role: "Media Head",
+          year: "Student",
+          photo: "/committee/mediaHead.jpeg",
         },
       ],
     },

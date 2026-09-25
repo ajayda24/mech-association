@@ -14,6 +14,8 @@ import { Cog } from "@/components/visuals/Hardware";
 import { hero } from "@/content/hero";
 import { site } from "@/content/site";
 import { useAppReady } from "@/components/providers/AppReady";
+import { Section } from "../layout/Section";
+import { Statement } from "./Statement";
 
 /**
  * Hero, composed as a technical drawing rather than a centred landing stack.
@@ -228,6 +230,10 @@ export function Hero() {
           </motion.div>
         </div>
       </div>
+
+      <Section tone="steel">
+        <Statement />
+      </Section>
 
       {/* The assembly holds the viewport while scroll drives it apart. */}
       <StickyStage length={2.4} className="z-0 -mt-[10svh] sm:mt-0">

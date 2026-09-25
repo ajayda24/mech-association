@@ -19,6 +19,9 @@ export default function Home() {
         <Hero />
       </Section>
 
+      {/* <Section tone="steel">
+        <Statement />
+      </Section> */}
       {/* pinned: must not sit inside an overflow ancestor */}
       <Section id="about" tone="pitch" clip={false}>
         <About />
@@ -26,12 +29,9 @@ export default function Home() {
 
       <Section id="domains" tone="silver">
         <Domains />
-        <Years />
+        {/* <Years /> */}
       </Section>
 
-      <Section tone="steel">
-        <Statement />
-      </Section>
 
       <Section id="committee" tone="silver">
         <Committee />
