@@ -336,19 +336,43 @@ function EmptyState({
   status: AlumniData["status"];
   unmatched: string[];
 }) {
-  const message =
+  /*
+   * Every status here is a setup or plumbing problem a visitor can do nothing
+   * about, so they all read the same publicly. The cause is printed below in
+   * development only.
+   */
+  const reason =
     status === "no-columns"
-      ? "The sheet was read, but no Name and Passed-out-year columns were recognised."
+      ? "Sheet read, but no Name/BATCH columns were recognised."
       : status === "fetch-failed"
-        ? "The alumni sheet could not be reached just now. It'll reappear on the next refresh."
-        : alumniCopy.emptyNoData;
+        ? "Sheet could not be reached (check the published CSV URL)."
+        : "ALUMNI_SHEET_CSV_URL is not set in .env.local.";
 
   return (
-    <div className="border-line-strong grid place-items-center rounded-2xl border border-dashed px-6 py-16 text-center">
-      <p className="text-steel-400 max-w-[46ch] text-sm">{message}</p>
-      {process.env.NODE_ENV === "development" && unmatched.length > 0 && (
-        <p className="text-ink-faint mt-4 max-w-[60ch] font-mono text-[11px]">
-          Unmatched sheet headers: {unmatched.join(" · ")}
+    <div className="border-line-strong relative grid place-items-center overflow-hidden rounded-2xl border border-dashed px-6 py-16 text-center sm:py-20">
+      <span
+        aria-hidden
+        className="glow-gold pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 opacity-25"
+      />
+
+      <span
+        aria-hidden
+        className="border-line-strong text-gold-300 relative mb-5 grid h-11 w-11 place-items-center rounded-full border text-lg"
+      >
+        ✦
+      </span>
+
+      <p className="text-ink text-display relative text-lg sm:text-xl">
+        {alumniCopy.comingSoonTitle}
+      </p>
+      <p className="text-steel-400 relative mt-2 max-w-[46ch] text-sm text-balance">
+        {alumniCopy.comingSoonBody}
+      </p>
+
+      {process.env.NODE_ENV === "development" && (
+        <p className="text-ink-faint relative mt-6 max-w-[60ch] font-mono text-[11px]">
+          dev: {reason}
+          {unmatched.length > 0 && ` · unmatched: ${unmatched.join(" · ")}`}
         </p>
       )}
     </div>

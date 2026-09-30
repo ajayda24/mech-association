@@ -267,6 +267,12 @@ export const alumniCopy = {
   searchPlaceholder: "Search name, company, course or institution",
   allYearsLabel: "All batches",
   emptyFiltered: "No alumni match that search yet.",
-  emptyNoData:
-    "The alumni directory isn't connected yet. Once the response sheet is published, entries appear here automatically.",
+  /*
+   * Written for a VISITOR, not for whoever maintains the sheet. "Isn't
+   * connected yet" describes our plumbing, which reads as broken to everyone
+   * else. The real cause is printed underneath in development only.
+   */
+  comingSoonTitle: "Directory coming soon",
+  comingSoonBody:
+    "Alumni entries are being collected. Check back shortly — or add yourself if you have already graduated.",
 } as const;

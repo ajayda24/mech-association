@@ -155,9 +155,20 @@ export const eventsCopy = {
   addEvent: "Propose an event",
   viewAll: "View all events",
   viewFewer: "Show fewer",
-  /** Shown when the sheet is connected but nothing is scheduled ahead. */
-  emptyUpcoming:
-    "Nothing on the calendar right now. New events are posted here as they're confirmed.",
-  emptyNoData:
-    "The events calendar isn't connected yet. Once the sheet is published, events appear here automatically.",
+  /*
+   * Empty states. All of them are written for a VISITOR, not for whoever
+   * maintains the sheet: "isn't connected yet" and "the sheet could not be
+   * reached" describe our plumbing, which is nobody else's problem and reads
+   * as broken. Whatever the underlying cause, the honest public message is
+   * the same — there is nothing to show yet. The real reason is printed
+   * underneath in development only.
+   */
+  /** Connected, but nothing is dated today or later. */
+  emptyUpcomingTitle: "No events scheduled",
+  emptyUpcomingBody:
+    "Nothing on the calendar right now. New dates are posted here as soon as they're confirmed.",
+  /** Not connected, unreachable, or columns unrecognised. */
+  comingSoonTitle: "Events coming soon",
+  comingSoonBody:
+    "The calendar is being put together. Check back shortly — upcoming workshops, talks and the symposium will be listed here.",
 } as const;

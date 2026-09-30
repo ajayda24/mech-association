@@ -169,21 +169,54 @@ function EmptyState({
   status: EventsData["status"];
   unmatched: string[];
 }) {
-  const message =
+  /*
+   * "ok" means the sheet was read fine and simply holds nothing ahead of
+   * today. Every other status is a setup or plumbing problem, which a visitor
+   * can do nothing about and should not be shown — they all read as "coming
+   * soon". The actual cause is printed below in development only.
+   */
+  const connected = status === "ok";
+  const title = connected
+    ? eventsCopy.emptyUpcomingTitle
+    : eventsCopy.comingSoonTitle;
+  const body = connected
+    ? eventsCopy.emptyUpcomingBody
+    : eventsCopy.comingSoonBody;
+
+  const reason =
     status === "no-columns"
-      ? "The sheet was read, but no Title and Date columns were recognised."
+      ? "Sheet read, but no Title/Date columns were recognised."
       : status === "fetch-failed"
-        ? "The events sheet could not be reached just now. It'll reappear on the next refresh."
+        ? "Sheet could not be reached (check the published CSV URL)."
         : status === "not-configured"
-          ? eventsCopy.emptyNoData
-          : eventsCopy.emptyUpcoming;
+          ? "EVENTS_SHEET_CSV_URL is not set in .env.local."
+          : null;
 
   return (
-    <div className="border-line-strong grid place-items-center rounded-2xl border border-dashed px-6 py-16 text-center">
-      <p className="text-steel-400 max-w-[46ch] text-sm">{message}</p>
-      {process.env.NODE_ENV === "development" && unmatched.length > 0 && (
-        <p className="text-ink-faint mt-4 max-w-[60ch] font-mono text-[11px]">
-          Unmatched sheet headers: {unmatched.join(" · ")}
+    <div className="border-line-strong relative grid place-items-center overflow-hidden rounded-2xl border border-dashed px-6 py-16 text-center sm:py-20">
+      <span
+        aria-hidden
+        className="glow-gold pointer-events-none absolute -top-24 left-1/2 h-48 w-48 -translate-x-1/2 opacity-25"
+      />
+
+      <span
+        aria-hidden
+        className="border-line-strong text-gold-300 relative mb-5 grid h-11 w-11 place-items-center rounded-full border text-lg"
+      >
+        ✦
+      </span>
+
+      <p className="text-ink text-display relative text-lg sm:text-xl">
+        {title}
+      </p>
+      <p className="text-steel-400 relative mt-2 max-w-[46ch] text-sm text-balance">
+        {body}
+      </p>
+
+      {process.env.NODE_ENV === "development" && reason && (
+        <p className="text-ink-faint relative mt-6 max-w-[60ch] font-mono text-[11px]">
+          dev: {reason}
+          {unmatched.length > 0 && ` · unmatched: ${unmatched.join(" · ")}`}
         </p>
       )}
     </div>
