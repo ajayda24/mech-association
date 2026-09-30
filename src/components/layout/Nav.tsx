@@ -238,7 +238,7 @@ export function Nav() {
             >
               {/* full label needs room; phones get the short form */}
               <span className="hidden sm:inline">{navCta.label}</span>
-              <span className="sm:hidden">Join</span>
+              <span className="sm:hidden">{navCta.label}</span>
             </NavItem>
             <button
               type="button"
