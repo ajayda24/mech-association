@@ -48,9 +48,8 @@ export const ALUMNI_REVALIDATE_SECONDS = 60; // 2 hours
  *   Currently Pursuing | Company Name | Company location | Job Role |
  *   Institution Name | Institution location | Specialisation
  *
- * Mobile Number and E-mail ID are deliberately absent. They are personal data
- * the site has no reason to read, and a column that is never mapped cannot be
- * rendered by accident.
+ * Mobile Number and E-mail ID ARE published, by decision — see SHOW_CONTACT
+ * below, which is the single switch for turning either back off.
  *
  * ONE FIELD CLAIMS ONE COLUMN. That is why the company and institution
  * locations are separate fields rather than a single `location` carrying both
@@ -85,6 +84,23 @@ export const alumniColumns = {
   pursuing: {
     required: false,
     aliases: ["currently pursuing", "current status", "pursuing", "status"],
+  },
+
+  // --- contact (published; gated by SHOW_CONTACT) ---
+  email: {
+    required: false,
+    aliases: ["e mail id", "email id", "email", "e mail", "mail id"],
+  },
+  phone: {
+    required: false,
+    aliases: [
+      "mobile number",
+      "mobile",
+      "phone number",
+      "phone",
+      "contact number",
+      "whatsapp number",
+    ],
   },
 
   // --- for alumni in work ---
@@ -155,6 +171,26 @@ export const alumniColumns = {
 } as const;
 
 export type AlumniField = keyof typeof alumniColumns;
+
+/**
+ * Which contact details appear on a card.
+ *
+ * Flip either to false and it stops being read from the sheet as well as
+ * stops rendering — the value never reaches the browser at all, rather than
+ * being hidden with CSS where "view source" would still show it.
+ *
+ * `phone: false` is the intended end state; it is true for now by request.
+ *
+ * Worth remembering what publishing these means: the page is public and so is
+ * the CSV behind it, so both are readable by anyone and by scrapers. The
+ * alumni gave these details to the association on a form, which is not
+ * obviously the same as agreeing to put them on the open web — so it is worth
+ * telling them, or asking on the form itself.
+ */
+export const SHOW_CONTACT = {
+  email: true,
+  phone: true,
+} as const;
 
 /**
  * Cell values in the APPROVED column that mean "yes, show this one".

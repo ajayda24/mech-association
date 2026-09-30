@@ -171,7 +171,7 @@ export function Hero() {
 
             <motion.p
               {...fade(0.62)}
-              className="text-steel-400 mt-5 max-w-[34ch] text-sm leading-relaxed sm:mt-7 sm:max-w-[44ch] sm:text-base"
+              className="text-steel-400 mt-5  text-sm leading-relaxed sm:mt-7 sm:max-w-[60ch] sm:text-base"
             >
               {site.tagline} {site.description}
             </motion.p>

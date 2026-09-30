@@ -34,14 +34,13 @@ export const site = {
  */
 export const navLinks = [
   { label: "About", href: "#about" },
-  { label: "Committee", href: "#committee" },
+  { label: "Execom", href: "#committee" },
   { label: "Events", href: "#events" },
   { label: "Notes", href: "/notes" },
   { label: "Alumni", href: "/alumni" },
 ] as const;
 
 export const navCta = { label: "Support Hub", href: "#support" } as const;
-export const navSecondary = { label: "Impact", href: "#impact" } as const;
 
 /** The four undergraduate years the association spans. */
 export const years = [

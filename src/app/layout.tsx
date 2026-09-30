@@ -88,7 +88,7 @@ export default function RootLayout({
               viewport rather than to the document, so it stays with the reader
               the whole way down and back up.
             */}
-            <DevCredit />
+            {/* <DevCredit /> */}
           </SmoothScroll>
         </Preloader>
       </body>

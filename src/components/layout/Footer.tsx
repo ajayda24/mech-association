@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { navLinks, navSecondary, site } from "@/content/site";
+import { navLinks, site } from "@/content/site";
 
 /**
  * The footer renders on every route, so its in-page anchors have to be
@@ -20,7 +20,7 @@ export function Footer() {
     <footer className="tone-pitch shell-gutter relative border-line border-t pt-10 pb-24 md:pb-20">
       <div className="mx-auto flex max-w-[1400px] flex-col gap-8 md:flex-row md:items-center md:justify-between">
         <ul className="flex flex-wrap items-center gap-x-10 gap-y-3">
-          {[...navLinks, navSecondary].map((link) => (
+          {[...navLinks].map((link) => (
             <li key={link.href}>
               <Link
                 href={footerHref(link.href)}

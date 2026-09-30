@@ -7,7 +7,7 @@
 export const about = {
   heading: ["The Association", "At Work"],
   intro:
-    "Three wings, four years, one department. Every wing is run by students and handed over to the next batch each year.",
+    "Led by Students, United by Purpose, Built to Leave a Lasting Legacy",
   steps: [
     {
       key: "study",

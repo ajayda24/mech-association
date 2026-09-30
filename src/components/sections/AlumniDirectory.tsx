@@ -35,6 +35,7 @@ export function AlumniDirectory({ data }: { data: AlumniData }) {
         a.specialisation,
         a.companyLocation,
         a.institutionLocation,
+        a.email,
       ].some((v) => v.toLowerCase().includes(q));
     });
   }, [data.alumni, query, year]);
@@ -136,6 +137,42 @@ function Chip({
   );
 }
 
+/** 12px line icons, sized to sit on the text baseline beside a link. */
+function MailIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3 w-3 shrink-0 opacity-60"
+    >
+      <rect x="1.75" y="3.75" width="12.5" height="8.5" rx="1.75" />
+      <path d="m2.5 5 5.5 3.6L13.5 5" />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg
+      aria-hidden
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-3 w-3 shrink-0 opacity-60"
+    >
+      <path d="M5.2 2.4 6.8 5 5.4 6.4a8.6 8.6 0 0 0 4.2 4.2L11 9.2l2.6 1.6-.6 1.9a1.4 1.4 0 0 1-1.6 1C7 13 3 9 2.4 4.6a1.4 1.4 0 0 1 1-1.6l1.8-.6Z" />
+    </svg>
+  );
+}
+
 function AlumCard({ alum }: { alum: Alum }) {
   const { name, year, company, role, experience, linkedin } = alum;
 
@@ -148,41 +185,58 @@ function AlumCard({ alum }: { alum: Alum }) {
   const place = working ? company : alum.institution;
   const what = working ? role : alum.specialisation;
   const where = working ? alum.companyLocation : alum.institutionLocation;
+  /* Minor facts on one quiet line rather than three competing pills. */
+  const meta = [where, experience].filter(Boolean);
+  const hasContact = Boolean(alum.email || alum.phone || linkedin);
 
   /*
-   * The whole card is a link when a profile URL survived validation, and a
-   * plain article otherwise — rather than a nested anchor, which would put an
-   * interactive element inside an interactive element.
+   * The card is always a plain article, never a link.
+   *
+   * It used to become an <a> whenever a LinkedIn URL existed, but now that
+   * cards carry mailto: and tel: links, that would nest an anchor inside an
+   * anchor — invalid HTML which browsers recover from unpredictably and which
+   * leaves keyboard and screen-reader users unable to reach the inner links.
+   * The profile sits in the contact row with the others instead.
    */
-  const Wrapper = linkedin ? "a" : "article";
-  const linkProps = linkedin
-    ? {
-        href: linkedin,
-        target: "_blank" as const,
-        rel: "noopener noreferrer nofollow" as const,
-      }
-    : {};
-
   return (
-    <Wrapper
-      {...linkProps}
-      className="surface-steel group relative flex h-full flex-col gap-4 p-5 transition-colors duration-500"
-    >
+    <article className="surface-steel group ring-line/0 hover:ring-gold-400/25 relative flex h-full flex-col overflow-hidden p-5 ring-1 transition-all duration-500 hover:-translate-y-0.5">
+      {/* hairline that draws itself across the top edge on hover */}
       <span className="bg-gold-400 absolute top-0 left-5 h-px w-0 transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-[calc(100%-2.5rem)]" />
 
-      <div className="flex items-start gap-3.5">
-        {/* initials plate — the portrait stand-in, same idea as the committee grid */}
+      {/* warm pool that fades up behind the monogram */}
+      <span
+        aria-hidden
+        className="glow-gold pointer-events-none absolute -top-16 -left-16 h-40 w-40 opacity-0 transition-opacity duration-700 group-hover:opacity-50"
+      />
+
+      {/*
+        Ghost numeral for the batch year — the same device the Study Zone
+        semester cards use, so the two pages read as one system. Decorative
+        only: the readable year lives in the meta line below.
+      */}
+      {year !== null && (
         <span
           aria-hidden
-          className="surface-pitch text-chrome text-display grid h-12 w-12 shrink-0 place-items-center rounded-lg text-base tracking-tight"
+          className="text-display text-ink/[0.045] pointer-events-none absolute -top-2 -right-1 text-6xl leading-none tabular-nums select-none"
+        >
+          {year}
+        </span>
+      )}
+
+      <div className="relative flex items-start gap-3.5">
+        {/* monogram plate, ringed in gold */}
+        <span
+          aria-hidden
+          className="surface-pitch text-chrome text-display ring-gold-400/20 grid h-11 w-11 shrink-0 place-items-center rounded-xl text-sm tracking-tight ring-1"
         >
           {initialsOf(name)}
         </span>
 
-        <div className="min-w-0">
-          <h3 className="text-ink text-display truncate text-base leading-tight">
+        <div className="min-w-0 flex-1">
+          <h3 className="text-ink text-display truncate text-[15px] leading-tight sm:text-base">
             {name}
           </h3>
+
           {(what || place) && (
             <p className="text-steel-400 mt-1 text-xs leading-snug sm:text-[13px]">
               {what && <span>{what}</span>}
@@ -190,35 +244,87 @@ function AlumCard({ alum }: { alum: Alum }) {
               {place && <span>{place}</span>}
             </p>
           )}
-          {where && (
-            <p className="text-ink-faint mt-0.5 text-[11px]">{where}</p>
-          )}
         </div>
       </div>
 
-      <div className="mt-auto flex flex-wrap items-center gap-2">
-        {year !== null && (
-          <span className="border-line-strong text-steel-300 rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] uppercase">
-            {year}
-          </span>
-        )}
+      {/* status dot plus the quiet facts */}
+      <div className="text-ink-faint relative mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
         {alum.pursuing && (
-          <span className="border-line-strong text-steel-300 rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] uppercase">
+          <span className="text-steel-300 inline-flex items-center gap-1.5 font-medium">
+            <span
+              aria-hidden
+              className="bg-gold-400 h-1.5 w-1.5 shrink-0 rounded-full"
+            />
             {alum.pursuing}
           </span>
         )}
-        {experience && (
-          <span className="border-line-strong text-steel-300 rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] uppercase">
-            {experience}
-          </span>
+        {year !== null && (
+          <>
+            {alum.pursuing && <span aria-hidden>·</span>}
+            <span className="tabular-nums">Batch of {year}</span>
+          </>
         )}
-        {linkedin && (
-          <span className="text-gold-300 ml-auto text-[11px] font-semibold tracking-[0.1em] uppercase">
-            in ↗
-          </span>
+        {meta.length > 0 && (
+          <>
+            <span aria-hidden>·</span>
+            <span>{meta.join(" · ")}</span>
+          </>
         )}
       </div>
-    </Wrapper>
+
+      {/*
+        Contact block, pinned to the bottom so it lines up across a row of
+        cards of differing heights. `mt-auto` only bites once a taller
+        neighbour stretches the card; `pt-5` guarantees room when it does not.
+      */}
+      {hasContact && (
+        <div className="relative mt-auto pt-5">
+          <div className="border-line flex items-end gap-3 border-t pt-3 text-[11px]">
+            <div className="flex min-w-0 flex-col gap-1.5">
+              {alum.email && (
+                <a
+                  href={`mailto:${alum.email}`}
+                  /*
+                   * `truncate`, not `break-all`. Addresses are long, and
+                   * break-all chopped them mid-word across two ragged lines;
+                   * an ellipsis reads as "there is more", and the full value
+                   * stays on the link and in the tooltip.
+                   */
+                  title={alum.email}
+                  className="text-steel-400 hover:text-gold-300 flex min-w-0 items-center gap-1.5 transition-colors"
+                >
+                  <MailIcon />
+                  <span className="truncate">{alum.email}</span>
+                </a>
+              )}
+              {alum.phone && (
+                <a
+                  /* Strip spacing so the dialled number is valid, while the
+                     label keeps however the alumnus wrote it. */
+                  href={`tel:${alum.phone.replace(/[^\d+]/g, "")}`}
+                  className="text-steel-400 hover:text-gold-300 flex items-center gap-1.5 tabular-nums whitespace-nowrap transition-colors"
+                >
+                  <PhoneIcon />
+                  {alum.phone}
+                </a>
+              )}
+            </div>
+
+            {linkedin && (
+              <a
+                href={linkedin}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                aria-label={`${name} on LinkedIn`}
+                className="border-line-strong text-gold-300 hover:border-gold-400/50 ml-auto grid h-7 w-7 shrink-0 place-items-center rounded-full border text-[10px] font-semibold transition-colors"
+              >
+                in
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+    </article>
   );
 }
 

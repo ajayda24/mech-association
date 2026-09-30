@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useLenisRef } from "@/components/providers/SmoothScroll";
 import { Logo } from "@/components/layout/Logo";
-import { navCta, navLinks, navSecondary } from "@/content/site";
+import { navCta, navLinks, site } from "@/content/site";
 
 /** Height of the floating nav, used as the scroll-to offset. */
 const NAV_OFFSET = -96;
@@ -224,13 +224,13 @@ export function Nav() {
           </ul>
 
           <div className="flex shrink-0 items-center gap-2">
-            <NavItem
+            {/* <NavItem
               href={resolve(navSecondary.href)}
               onClick={go(navSecondary.href)}
               className="text-steel-400 hover:text-ink hidden px-3 text-[13px] font-medium transition-colors duration-300 sm:block"
             >
               {navSecondary.label}
-            </NavItem>
+            </NavItem> */}
             <NavItem
               href={resolve(navCta.href)}
               onClick={go(navCta.href)}
@@ -270,31 +270,133 @@ export function Nav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-void/95 fixed inset-0 z-40 backdrop-blur-2xl lg:hidden"
+            transition={{ duration: 0.35 }}
+            // Lenis is stopped while this is open; let the sheet scroll itself
+            // on short phones.
+            data-lenis-prevent
+            className="ctx-on-dark bg-void/96 fixed inset-0 z-40 overflow-y-auto backdrop-blur-2xl lg:hidden"
           >
-            <ul className="shell-gutter flex h-full flex-col justify-center gap-1">
-              {[...navLinks, navSecondary].map((link, i) => (
-                <motion.li
-                  key={link.href}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    delay: 0.06 * i + 0.08,
-                    duration: 0.6,
-                    ease: [0.16, 1, 0.3, 1],
-                  }}
+            {/* warm bloom in the corner + a faint machined grid */}
+            <div className="glow-gold pointer-events-none absolute -top-40 -right-40 h-[28rem] w-[28rem] opacity-70" />
+            <div className="texture-knurl pointer-events-none absolute inset-0 opacity-25 [mask-image:linear-gradient(to_bottom,#000,transparent_70%)]" />
+            {/* gold hairline down the left edge, drawn in on open */}
+            <motion.span
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              exit={{ scaleY: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="pointer-events-none absolute top-0 bottom-0 left-[clamp(0.6rem,2.5vw,2.5rem)] w-px origin-top bg-gradient-to-b from-transparent via-gold-400/60 to-transparent"
+            />
+
+            <div
+              className="shell-gutter relative flex min-h-full flex-col pb-[calc(max(1.75rem,env(safe-area-inset-bottom))+4rem)]"
+              style={{ paddingTop: "calc(max(1.35rem, env(safe-area-inset-top)) + 5.5rem)" }}
+            >
+              <motion.p
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05, duration: 0.5 }}
+                className="text-gold-400 flex items-center gap-3 text-[11px] font-medium tracking-[0.3em] uppercase"
+              >
+                <span className="bg-gold-400 h-px w-8" />
+                Menu
+              </motion.p>
+
+              <ul className="mt-6 flex-1">
+                {[...navLinks].map((link, i) => {
+                  const isActive = isAnchor(link.href)
+                    ? isHome && active === link.href
+                    : pathname === link.href;
+                  return (
+                    <motion.li
+                      key={link.href}
+                      initial={{ opacity: 0, y: 24 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        delay: 0.06 * i + 0.1,
+                        duration: 0.6,
+                        ease: [0.16, 1, 0.3, 1],
+                      }}
+                      className="border-line border-b"
+                    >
+                      <NavItem
+                        href={resolve(link.href)}
+                        onClick={go(link.href)}
+                        aria-current={isActive ? "location" : undefined}
+                        className="group flex items-baseline gap-4 py-3"
+                      >
+                        <span className="text-gold-500 w-6 shrink-0 text-[11px] font-medium tracking-[0.16em] tabular-nums">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span
+                          className={`text-display flex-1 text-[clamp(2rem,9.5vw,3.25rem)] transition-colors duration-300 ${
+                            isActive
+                              ? "text-gilt"
+                              : "text-ink group-hover:text-gold-200"
+                          }`}
+                        >
+                          {link.label}
+                        </span>
+                        <span
+                          className={`self-center text-lg transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100 ${
+                            isActive
+                              ? "text-gold-300 translate-x-0 opacity-100"
+                              : "text-gold-300 -translate-x-2 opacity-40"
+                          }`}
+                        >
+                          →
+                        </span>
+                      </NavItem>
+                    </motion.li>
+                  );
+                })}
+              </ul>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.45, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                className="mt-8"
+              >
+                <NavItem
+                  href={resolve(navCta.href)}
+                  onClick={go(navCta.href)}
+                  className="btn-gold flex items-center justify-between rounded-full py-3.5 pr-2 pl-6 text-sm font-semibold shadow-[0_18px_40px_-18px_rgba(217,175,78,0.7)]"
                 >
-                  <NavItem
-                    href={resolve(link.href)}
-                    onClick={go(link.href)}
-                    className="text-display text-ink hover:text-gold-200 block py-2 text-[clamp(2.25rem,11vw,3.5rem)] transition-colors duration-300"
-                  >
-                    {link.label}
-                  </NavItem>
-                </motion.li>
-              ))}
-            </ul>
+                  {navCta.label}
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-black/85 text-gold-200">
+                    →
+                  </span>
+                </NavItem>
+
+                {/* <div className="mt-8 flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-ink-faint text-[10px] tracking-[0.24em] uppercase">
+                      Write to us
+                    </p>
+                    <a
+                      href={`mailto:${site.email}`}
+                      className="text-ink hover:text-gold-200 mt-1.5 block text-sm transition-colors duration-300"
+                    >
+                      {site.email}
+                    </a>
+                  </div>
+                  <ul className="flex gap-4">
+                    {site.social.map((s) => (
+                      <li key={s.label}>
+                        <a
+                          href={s.href}
+                          className="text-steel-400 hover:text-gold-300 text-[11px] font-medium tracking-[0.16em] uppercase transition-colors duration-300"
+                        >
+                          {s.label.slice(0, 2)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div> */}
+
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

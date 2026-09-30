@@ -6,6 +6,7 @@ import {
   APPROVAL_MODE,
   APPROVED_VALUES,
   REJECTED_VALUES,
+  SHOW_CONTACT,
   alumniColumns,
   type AlumniField,
 } from "@/content/alumni";
@@ -31,6 +32,9 @@ export type Alum = {
   institution: string;
   institutionLocation: string;
   specialisation: string;
+  /** Empty unless SHOW_CONTACT allows it — gated when the row is built. */
+  email: string;
+  phone: string;
   /** Not in the current form; empty until those questions are added. */
   experience: string;
   linkedin: string;
@@ -115,6 +119,10 @@ export async function getAlumni(): Promise<AlumniData> {
       institution: at(row, "institution"),
       institutionLocation: at(row, "institutionLocation"),
       specialisation: at(row, "specialisation"),
+      // Gated here rather than in the component: a disabled field is never
+      // put into the payload, so it cannot be read out of the page source.
+      email: SHOW_CONTACT.email ? at(row, "email") : "",
+      phone: SHOW_CONTACT.phone ? at(row, "phone") : "",
       experience: at(row, "experience"),
       linkedin: parseLinkUrl(at(row, "linkedin"), ALLOWED_PROFILE_HOSTS),
     });
