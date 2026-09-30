@@ -21,13 +21,31 @@ const cinzel = Cinzel({
   display: "swap",
 });
 
+/*
+ * Share previews use app/opengraph-image.png and twitter-image.png: the logo
+ * composited onto solid black. Without them, WhatsApp and friends fell back to
+ * the transparent favicon and painted it on white.
+ */
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: {
     default: `${site.name} — ${site.tagline}`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
   icons: { icon: "/logo/mech-logo-256.png" },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: site.longName,
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+  },
 };
 
 export const viewport: Viewport = {
