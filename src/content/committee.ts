@@ -32,7 +32,7 @@ export type CommitteeGroup = {
 export const committee = {
   heading: ["The People", "Behind It"],
   intro:
-    "Elected each year by the department and handed over at the end of every academic session. Faculty advise; students run it.",
+    "Entrusted with a legacy, united by purpose, and driven to shape the future of our department",
   groups: [
     {
       key: "faculty",

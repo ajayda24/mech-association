@@ -2,17 +2,18 @@ import "server-only";
 
 import {
   ALLOWED_REGISTER_HOSTS,
+  APPROVAL_MODE,
   APPROVED_VALUES,
   DATE_ORDER,
   EVENTS_REVALIDATE_SECONDS,
-  REQUIRE_APPROVAL,
+  REJECTED_VALUES,
   eventColumns,
   type EventField,
 } from "@/content/events";
 import {
   cellReader,
   fetchSheetRows,
-  isApproved,
+  isRowVisible,
   mapHeaders,
   parseLinkUrl,
   type SheetStatus,
@@ -129,12 +130,18 @@ export async function getEvents(): Promise<EventsData> {
     const title = at(row, "title");
     if (!title) continue;
 
-    if (REQUIRE_APPROVAL) {
-      // No approved column at all means nothing is approved — failing closed,
-      // so a sheet published before the column exists cannot leak every row.
-      if (index.approved === -1 || !isApproved(at(row, "approved"), APPROVED_VALUES))
-        continue;
-    }
+    // In "deny" mode a missing APPROVED column simply means nothing has been
+    // hidden, so every row publishes — which is the point. `at()` returns ""
+    // for an unmapped column, and "" is not a rejected value.
+    if (
+      !isRowVisible(
+        at(row, "approved"),
+        APPROVAL_MODE,
+        APPROVED_VALUES,
+        REJECTED_VALUES,
+      )
+    )
+      continue;
 
     const date = parseEventDate(at(row, "date"));
     // Undated rows are dropped rather than shown: this section is "what's

@@ -5,7 +5,7 @@ import { NotesLibrary } from "@/components/sections/NotesLibrary";
 import { notesCopy } from "@/content/notes";
 
 export const metadata: Metadata = {
-  title: "Notes & Papers",
+  title: "Study Zone",
   description: notesCopy.teaser,
 };
 

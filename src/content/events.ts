@@ -10,6 +10,8 @@
  * or reordering form questions cannot break the mapping.
  */
 
+import type { ApprovalMode } from "@/lib/sheet";
+
 /** How long a fetched copy of the sheet is reused before re-fetching, in seconds. */
 export const EVENTS_REVALIDATE_SECONDS = 20 * 60; // 20 minutes
 
@@ -99,8 +101,35 @@ export const APPROVED_VALUES = [
   "done",
 ];
 
-/** Set false to publish every row and ignore the APPROVED column entirely. */
-export const REQUIRE_APPROVAL = true;
+/**
+ * Cell values in the APPROVED column that HIDE a row, in "deny" mode.
+ * Matching ignores case and punctuation, so "No." and "NO" both count.
+ */
+export const REJECTED_VALUES = [
+  "no",
+  "n",
+  "false",
+  "0",
+  "reject",
+  "rejected",
+  "hide",
+  "hidden",
+  "remove",
+  "spam",
+];
+
+/**
+ * How the APPROVED column gates rows.
+ *
+ * "deny"  — every row publishes unless its APPROVED cell says No. A blank
+ *           cell publishes, and so does a sheet with no APPROVED column.
+ * "allow" — nothing publishes until a row is explicitly ticked Yes.
+ *
+ * Set to "deny" so the committee only acts on rows they want REMOVED. The
+ * trade-off: the form is public, so a submission is live until somebody marks
+ * it No. Worth a periodic look at the sheet.
+ */
+export const APPROVAL_MODE: ApprovalMode = "deny";
 
 /**
  * Hosts a registration link may point at. EMPTY MEANS ANY HTTPS URL.

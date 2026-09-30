@@ -12,13 +12,13 @@ export const hero = {
    * says more about a mechanical department than a sentence of prose does.
    */
   meta: [
-    { k: "Established", v: "2001" },
+    { k: "Established", v: "2002" },
     { k: "Members", v: "200+" },
     { k: "Faculties", v: "20+" },
     { k: "Alumni", v: "1450+" },
   ],
   index: "01",
-  primary: { label: "Support Hub", href: "#support" },
+  primary: { label: "Study Zone", href: "/notes" },
   secondary: { label: "See Upcoming Events", href: "#events" },
   /** Runs in the ticker under the hero. */
   ticker: [

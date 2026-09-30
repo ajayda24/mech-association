@@ -91,8 +91,8 @@ export function SupportHub() {
               >
                 {/* the numeral, oversized and half-bled off the corner */}
                 <span
-                  className={`text-display pointer-events-none absolute -top-6 -right-3 text-[9rem] leading-none select-none ${
-                    d.tone === "gilt" ? "text-black/10" : "text-white/[0.045]"
+                  className={`text-display pointer-events-none absolute -top-6 text-[9rem] leading-none select-none ${
+                    d.tone === "steel" ? "-right-2 text-black/[0.06]" : `-right-3 ${d.tone === "gilt" ? "text-black/10" : "text-white/[0.045]"}`
                   }`}
                 >
                   {d.no}
@@ -130,39 +130,61 @@ export function SupportHub() {
                   {d.body}
                 </p>
 
-                {/* the coordinator — the whole row dials them */}
-                <a
-                  href={`tel:${d.coordinator.phone.replace(/\s+/g, "")}`}
-                  className={`mt-8 block border-t pt-5 ${
-                    d.tone === "gilt" ? "border-black/15" : "border-white/10"
+                {/* the coordinators — each row dials its own number */}
+                <div
+                  className={`mt-8 border-t pt-5 ${
+                    d.tone === "gilt" ? "border-black/15" : "border-line"
                   }`}
                 >
-                  <span
-                    className={`block text-[11px] font-medium tracking-[0.2em] uppercase ${
+                  <p
+                    className={`text-[11px] font-medium tracking-[0.2em] uppercase ${
                       d.tone === "gilt" ? "text-black/55" : "text-steel-400"
                     }`}
                   >
-                    Coordinator
-                  </span>
-                  <span
-                    className={`mt-1.5 block text-base font-medium ${
-                      d.tone === "gilt" ? "text-black" : "text-ink"
-                    }`}
-                  >
-                    {d.coordinator.name}
-                  </span>
-                  <span
-                    className={`mt-3 flex items-center gap-2 text-xs font-medium tracking-[0.16em] ${
-                      d.tone === "gilt" ? "text-black/70" : "text-gold-400"
-                    }`}
-                  >
-                    {d.coordinator.phone}
-                    <span className="bg-current/30 h-px flex-1 origin-left scale-x-100 transition-transform duration-500 group-hover:scale-x-[0.7]" />
-                    <span className="transition-transform duration-500 group-hover:translate-x-1.5">
-                      →
-                    </span>
-                  </span>
-                </a>
+                    Coordinators
+                  </p>
+
+                  <ul className="mt-2">
+                    {d.contacts.map((c) => (
+                      <li key={c.phone}>
+                        <a
+                          href={`tel:${c.phone.replace(/\s+/g, "")}`}
+                          className="group/contact block py-2.5"
+                        >
+                          <span
+                            className={`flex items-center gap-2 text-base font-medium ${
+                              d.tone === "gilt" ? "text-black" : "text-ink"
+                            }`}
+                          >
+                            {c.name}
+                            {"role" in c && (
+                              <span
+                                className={`rounded-full border py-1 pr-2.5 pl-[calc(0.625rem+0.16em)] text-[10px] leading-none tracking-[0.16em] uppercase ${
+                                  d.tone === "gilt"
+                                    ? "border-black/20 text-black/60"
+                                    : "border-line-strong text-steel-400"
+                                }`}
+                              >
+                                {c.role}
+                              </span>
+                            )}
+                          </span>
+                          <span
+                            className={`mt-1 flex items-center gap-2 text-xs font-medium tracking-[0.16em] ${
+                              d.tone === "gilt" ? "text-black/70" : "text-gold-400"
+                            }`}
+                          >
+                            {c.phone}
+                            <span className="bg-current/30 h-px flex-1 origin-left scale-x-100 transition-transform duration-500 group-hover/contact:scale-x-[0.7]" />
+                            <span className="transition-transform duration-500 group-hover/contact:translate-x-1.5">
+                              →
+                            </span>
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </motion.article>
             </div>
           ))}

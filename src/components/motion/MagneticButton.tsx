@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRef, type ReactNode } from "react";
 import { gsap } from "@/lib/gsap";
 
@@ -63,18 +64,25 @@ export function MagneticButton({
     });
   };
 
-  return (
-    <a
-      ref={ref}
-      href={href}
-      onClick={onClick}
-      onMouseMove={move}
-      onMouseLeave={reset}
-      className={`inline-flex items-center justify-center ${className}`}
-    >
-      <span ref={label} className={`inline-block ${labelClassName}`}>
-        {children}
-      </span>
-    </a>
+  const props = {
+    ref,
+    href,
+    onClick,
+    onMouseMove: move,
+    onMouseLeave: reset,
+    className: `inline-flex items-center justify-center ${className}`,
+  };
+  const inner = (
+    <span ref={label} className={`inline-block ${labelClassName}`}>
+      {children}
+    </span>
+  );
+
+  // `#section` scrolls within the page (Lenis handles it); anything else is a
+  // route, so it goes through Next's Link to stay client-side.
+  return href.startsWith("#") ? (
+    <a {...props}>{inner}</a>
+  ) : (
+    <Link {...props}>{inner}</Link>
   );
 }

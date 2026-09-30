@@ -85,9 +85,9 @@ export function ordinal(n: number) {
 export const notesCopy = {
   /** Landing-page one-liner. */
   teaser:
-    "Notes, question papers and reference material for all eight semesters — collected by the batch, kept on Drive, open to everyone.",
+    "Syllabus, notes, previous question papers and reference material for all eight semesters — collected by the batch, kept on Drive, open to everyone.",
   teaserCta: "Open the notes library",
-  heading: ["Notes", "& Papers"],
+  heading: ["Study Zone"],
   intro:
     "Pick your year, then the semester. Each one opens the shared Drive folder the committee keeps up to date.",
   /** Shown on a card whose Drive link hasn't been added yet. */

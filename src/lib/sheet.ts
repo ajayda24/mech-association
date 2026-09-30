@@ -76,8 +76,26 @@ export function cellReader<F extends string>(index: Record<F, number>) {
   };
 }
 
-export function isApproved(raw: string, approvedValues: readonly string[]) {
-  return approvedValues.includes(normalise(raw));
+/**
+ * How the APPROVED column decides what publishes.
+ *
+ * "deny"  — everything publishes EXCEPT rows explicitly marked No. A blank
+ *           cell, or no column at all, means visible.
+ * "allow" — nothing publishes UNTIL a row is explicitly marked Yes. A blank
+ *           cell, or no column at all, means hidden.
+ */
+export type ApprovalMode = "deny" | "allow";
+
+export function isRowVisible(
+  cell: string,
+  mode: ApprovalMode,
+  approvedValues: readonly string[],
+  rejectedValues: readonly string[],
+) {
+  const value = normalise(cell);
+  return mode === "deny"
+    ? !rejectedValues.includes(value)
+    : approvedValues.includes(value);
 }
 
 /**

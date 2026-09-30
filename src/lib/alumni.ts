@@ -3,15 +3,16 @@ import "server-only";
 import {
   ALLOWED_PROFILE_HOSTS,
   ALUMNI_REVALIDATE_SECONDS,
+  APPROVAL_MODE,
   APPROVED_VALUES,
-  REQUIRE_APPROVAL,
+  REJECTED_VALUES,
   alumniColumns,
   type AlumniField,
 } from "@/content/alumni";
 import {
   cellReader,
   fetchSheetRows,
-  isApproved,
+  isRowVisible,
   mapHeaders,
   parseLinkUrl,
   type SheetStatus,
@@ -22,8 +23,15 @@ export type Alum = {
   name: string;
   /** Four-digit passing year, or null when the cell could not be read. */
   year: number | null;
+  /** "Studying" / "Working" — whichever the form offered. */
+  pursuing: string;
   company: string;
+  companyLocation: string;
   role: string;
+  institution: string;
+  institutionLocation: string;
+  specialisation: string;
+  /** Not in the current form; empty until those questions are added. */
   experience: string;
   linkedin: string;
 };
@@ -43,11 +51,17 @@ export type AlumniData = {
 
 /** Pull a four-digit year out of whatever the cell says: "2019", "2019 batch", "May 2019". */
 function parseYear(raw: string): number | null {
-  const m = raw.match(/\b(19|20)\d{2}\b/);
-  if (!m) return null;
-  const y = Number(m[0]);
-  // A year beyond next summer is a typo, not a batch.
-  return y >= 1950 && y <= new Date().getFullYear() + 1 ? y : null;
+  const found = [...raw.matchAll(/\b(?:19|20)\d{2}\b/g)].map((m) =>
+    Number(m[0]),
+  );
+  if (found.length === 0) return null;
+  // A range like "2022-2026" is joining year to passing year, so the LAST
+  // year is the one to group by. Taking the first would file everyone four
+  // years early and mislabel every filter chip.
+  const y = Math.max(...found);
+  // Far-future years are typos, but a near-future one is legitimate: current
+  // students enter the year they will graduate.
+  return y >= 1950 && y <= new Date().getFullYear() + 6 ? y : null;
 }
 
 export async function getAlumni(): Promise<AlumniData> {
@@ -77,22 +91,30 @@ export async function getAlumni(): Promise<AlumniData> {
     const name = at(row, "name");
     if (!name) continue;
 
-    if (REQUIRE_APPROVAL) {
-      // No approved column at all means nothing is approved — failing closed,
-      // so a sheet published before the column exists cannot leak every row.
-      if (
-        index.approved === -1 ||
-        !isApproved(at(row, "approved"), APPROVED_VALUES)
+    // In "deny" mode a missing APPROVED column simply means nothing has been
+    // hidden, so every row publishes — which is the point. `at()` returns ""
+    // for an unmapped column, and "" is not a rejected value.
+    if (
+      !isRowVisible(
+        at(row, "approved"),
+        APPROVAL_MODE,
+        APPROVED_VALUES,
+        REJECTED_VALUES,
       )
-        continue;
-    }
+    )
+      continue;
 
     alumni.push({
       id: `${r}-${name}`,
       name,
       year: parseYear(at(row, "year")),
+      pursuing: at(row, "pursuing"),
       company: at(row, "company"),
+      companyLocation: at(row, "companyLocation"),
       role: at(row, "role"),
+      institution: at(row, "institution"),
+      institutionLocation: at(row, "institutionLocation"),
+      specialisation: at(row, "specialisation"),
       experience: at(row, "experience"),
       linkedin: parseLinkUrl(at(row, "linkedin"), ALLOWED_PROFILE_HOSTS),
     });

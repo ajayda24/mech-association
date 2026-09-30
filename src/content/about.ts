@@ -11,31 +11,31 @@ export const about = {
   steps: [
     {
       key: "study",
-      label: "Study Hub",
+      label: "Study Zone",
       blurb:
-        "Notes, question papers and peer study sessions for every semester. Seniors who've cleared the subject walk juniors through it.",
+        "Syllabus, Notes, previous question papers and peer study sessions for every semester. Seniors who've cleared the subject walk juniors through it.",
       bullets: [
-        "Semester-wise notes and question banks",
-        "Peer tutoring before every series exam",
-        "Lab manuals and viva preparation",
+        "Subject wise syllabus",
+        "Module wise notes",
+        "Previous year question papers",
       ],
       metrics: [
         { label: "Subjects covered", value: 40, suffix: "+" },
-        { label: "Study sessions / sem", value: 30, suffix: "" },
+        { label: "Notes", value: "100+", suffix: "" },
       ],
     },
     {
       key: "help",
-      label: "Help Desk",
+      label: "Support Hub",
       blurb:
         "One place to ask — academics, registrations, scholarships or hostel queries. A student volunteer gets back to you, or finds someone who can.",
       bullets: [
-        "Registration and exam form guidance",
-        "Scholarship and certificate help",
-        "First-year onboarding support",
+        "Academics & Exams",
+        "Sports & Arts",
+        "GATE & Placements",
       ],
       metrics: [
-        { label: "Queries resolved", value: 500, suffix: "+" },
+        { label: "Coordinators", value: "10", suffix: "+" },
         { label: "Avg. response time", value: 24, suffix: "h" },
       ],
     },
@@ -51,7 +51,7 @@ export const about = {
       ],
       metrics: [
         { label: "Alumni on the network", value: 1450, suffix: "+" },
-        { label: "Mentor pairings", value: 88, suffix: "" },
+        { label: "Startups", value: 35, suffix: "+" },
       ],
     },
   ],

@@ -24,10 +24,18 @@ export function AlumniDirectory({ data }: { data: AlumniData }) {
     return data.alumni.filter((a) => {
       if (year !== "all" && a.year !== year) return false;
       if (!q) return true;
-      // Match across the fields a reader would actually search by.
-      return [a.name, a.company, a.role].some((v) =>
-        v.toLowerCase().includes(q),
-      );
+      // Match across the fields a reader would actually search by — both
+      // halves of the form, since most entries are in higher study rather
+      // than employment and would otherwise be unsearchable.
+      return [
+        a.name,
+        a.company,
+        a.role,
+        a.institution,
+        a.specialisation,
+        a.companyLocation,
+        a.institutionLocation,
+      ].some((v) => v.toLowerCase().includes(q));
     });
   }, [data.alumni, query, year]);
 
@@ -132,6 +140,16 @@ function AlumCard({ alum }: { alum: Alum }) {
   const { name, year, company, role, experience, linkedin } = alum;
 
   /*
+   * Alumni split into those working and those in higher study, and the form
+   * asks about both — so a card describes whichever side was filled in.
+   * Without this, everyone in a master's programme rendered as a bare name.
+   */
+  const working = Boolean(company);
+  const place = working ? company : alum.institution;
+  const what = working ? role : alum.specialisation;
+  const where = working ? alum.companyLocation : alum.institutionLocation;
+
+  /*
    * The whole card is a link when a profile URL survived validation, and a
    * plain article otherwise — rather than a nested anchor, which would put an
    * interactive element inside an interactive element.
@@ -165,12 +183,15 @@ function AlumCard({ alum }: { alum: Alum }) {
           <h3 className="text-ink text-display truncate text-base leading-tight">
             {name}
           </h3>
-          {(role || company) && (
+          {(what || place) && (
             <p className="text-steel-400 mt-1 text-xs leading-snug sm:text-[13px]">
-              {role && <span>{role}</span>}
-              {role && company && <span className="text-ink-faint"> at </span>}
-              {company && <span>{company}</span>}
+              {what && <span>{what}</span>}
+              {what && place && <span className="text-ink-faint"> at </span>}
+              {place && <span>{place}</span>}
             </p>
+          )}
+          {where && (
+            <p className="text-ink-faint mt-0.5 text-[11px]">{where}</p>
           )}
         </div>
       </div>
@@ -179,6 +200,11 @@ function AlumCard({ alum }: { alum: Alum }) {
         {year !== null && (
           <span className="border-line-strong text-steel-300 rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] uppercase">
             {year}
+          </span>
+        )}
+        {alum.pursuing && (
+          <span className="border-line-strong text-steel-300 rounded-full border px-2.5 py-1 text-[10px] font-semibold tracking-[0.12em] uppercase">
+            {alum.pursuing}
           </span>
         )}
         {experience && (

@@ -15,13 +15,13 @@ export const site = {
   college: "Institute of Engineering & Technology, Calicut University",
   /** Short form, used only under the department name in the hero. */
   collegeShort: "IET Calicut University",
-  tagline: "Built by the batch, for the batch.",
+  tagline: "Built by the students, shaped by their ideas",
   description:
-    "The student association of the Mechanical Engineering department — four years of students running the workshops, the build teams, the symposium and the alumni network.",
+    "and driven by a shared vision. We create opportunities to learn, lead, innovate, and grow — together building a stronger Mechanical Engineering community.",
   email: "mea@yourcollege.edu",
   social: [
-    { label: "Instagram", href: "#" },
-    { label: "LinkedIn", href: "#" },
+    { label: "Instagram", href: "https://www.instagram.com/mech.iet?stkn=MWhwa3hncHVub2FqMQ==" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/same-iet-085152404?utm_source=share_via&utm_content=profile&utm_medium=member_android" },
   ],
 } as const;
 
