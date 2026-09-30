@@ -18,6 +18,8 @@ export const site = {
   tagline: "Built by the students, shaped by their ideas",
   description:
     "and driven by a shared vision. We create opportunities to learn, lead, innovate, and grow — together building a stronger Mechanical Engineering community.",
+  /** Production origin; absolute URLs in share previews resolve against it. */
+  url: "https://mechiniet.vercel.app",
   email: "mea@yourcollege.edu",
   social: [
     { label: "Instagram", href: "https://www.instagram.com/mech.iet?stkn=MWhwa3hncHVub2FqMQ==" },
