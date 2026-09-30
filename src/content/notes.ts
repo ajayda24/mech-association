@@ -41,8 +41,8 @@ export const notesYears: NotesYear[] = [
     label: "First Year",
     short: "1st",
     semesters: [
-      { number: 1, driveUrl: "" },
-      { number: 2, driveUrl: "" },
+      { number: 1, driveUrl: "https://drive.google.com/drive/folders/1xy1F7KGDd6EbGgnr2219oOXGWht2Hp46" },
+      { number: 2, driveUrl: "https://drive.google.com/drive/folders/1xy1F7KGDd6EbGgnr2219oOXGWht2Hp46" },
     ],
   },
   {
@@ -50,8 +50,8 @@ export const notesYears: NotesYear[] = [
     label: "Second Year",
     short: "2nd",
     semesters: [
-      { number: 3, driveUrl: "" },
-      { number: 4, driveUrl: "" },
+      { number: 3, driveUrl: "https://drive.google.com/drive/folders/1xy1F7KGDd6EbGgnr2219oOXGWht2Hp46" },
+      { number: 4, driveUrl: "https://drive.google.com/drive/folders/1xy1F7KGDd6EbGgnr2219oOXGWht2Hp46" },
     ],
   },
   {
@@ -59,8 +59,8 @@ export const notesYears: NotesYear[] = [
     label: "Third Year",
     short: "3rd",
     semesters: [
-      { number: 5, driveUrl: "" },
-      { number: 6, driveUrl: "" },
+      { number: 5, driveUrl: "https://drive.google.com/drive/folders/1uITwqPUk29E7aFu1BkkkmJtaIHKwfG6H" },
+      { number: 6, driveUrl: "https://drive.google.com/drive/folders/1uITwqPUk29E7aFu1BkkkmJtaIHKwfG6H" },
     ],
   },
   {
@@ -68,8 +68,8 @@ export const notesYears: NotesYear[] = [
     label: "Final Year",
     short: "4th",
     semesters: [
-      { number: 7, driveUrl: "" },
-      { number: 8, driveUrl: "" },
+      { number: 7, driveUrl: "https://drive.google.com/drive/folders/1uITwqPUk29E7aFu1BkkkmJtaIHKwfG6H" },
+      { number: 8, driveUrl: "https://drive.google.com/drive/folders/1uITwqPUk29E7aFu1BkkkmJtaIHKwfG6H" },
     ],
   },
 ];
