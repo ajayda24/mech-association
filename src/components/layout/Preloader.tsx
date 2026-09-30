@@ -335,7 +335,7 @@ export function Preloader({ children }: { children: ReactNode }) {
                 in the viewport, and appending to it would drag that centre up.
                 The safe-area inset keeps it clear of the home indicator.
               */}
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.35, duration: 0.5 }}
@@ -358,11 +358,7 @@ export function Preloader({ children }: { children: ReactNode }) {
                   </a>
                 </div>
 
-                {/*
-                  Pre-cropped to a square and shipped at 160px — four times the
-                  displayed size at most, so it stays sharp on retina while
-                  costing 5KB on the one screen a visitor is already waiting on.
-                */}
+                
                 <span className="ring-gold-300/40 relative h-7 w-7 shrink-0 overflow-hidden rounded-full ring-1 sm:h-8 sm:w-8">
                   <Image
                     src="/developer.webp"
@@ -372,7 +368,7 @@ export function Preloader({ children }: { children: ReactNode }) {
                     className="object-cover"
                   />
                 </span>
-              </motion.div>
+              </motion.div> */}
             </motion.div>
           </motion.div>
         )}
