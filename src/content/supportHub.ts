@@ -10,8 +10,8 @@ export const supportHub = {
   items: [
     {
       no: "01",
-      kicker: "Academics & Exams",
-      title: "Classes, Marks, Exams",
+      title: "Academics & Exams",
+      kicker: "Learn, Prepare, Succeed",
       body: "Timetables, internals, attendance shortfalls, revaluation and exam registration — the first call for anything on the academic side.",
       contacts: [
         { name: "Naeem Abdul Azeez", role: "Faculty", phone: "+91 95267 45953" },
@@ -22,8 +22,8 @@ export const supportHub = {
     },
     {
       no: "02",
-      kicker: "Sports & Arts",
-      title: "Play, Perform, Represent",
+      title: "Sports & Arts",
+      kicker: "Play, Perform, Represent",
       body: "Team trials, university meets, arts fest entries and duty leave for events. Reach out before the deadline, not after.",
       contacts: [
         { name: "Gokul Vijay V", role: "Faculty", phone: "+91 95392 08465" },
@@ -34,8 +34,8 @@ export const supportHub = {
     },
     {
       no: "03",
-      kicker: "GATE & Placements",
-      title: "Prepare, Apply, Land",
+      title: "GATE & Placements",
+      kicker: "Prepare, Apply, Land",
       body: "GATE guidance, study material, placement drives, resumes and mock interviews — help for whatever comes after the degree.",
       contacts: [
         { name: "Harikrishnan", role: "Faculty", phone: "+91 94005 95723" },
