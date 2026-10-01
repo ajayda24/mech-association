@@ -86,7 +86,7 @@ export const notesCopy = {
   /** Landing-page one-liner. */
   teaser:
     "Syllabus, notes, previous question papers and reference material for all eight semesters — collected by the batch, kept on Drive, open to everyone.",
-  teaserCta: "Open the notes library",
+  teaserCta: "Open Study Zone",
   heading: ["Study Zone"],
   intro:
     "Pick your year, then the semester. Each one opens the shared Drive folder the committee keeps up to date.",

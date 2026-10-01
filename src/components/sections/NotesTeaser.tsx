@@ -15,7 +15,7 @@ export function NotesTeaser() {
         <div className="border-line-strong flex flex-col gap-8 border-t pt-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16">
           <div className="max-w-[52ch]">
             <span className="text-gold-300 text-[11px] font-semibold tracking-[0.24em] uppercase">
-              Notes &amp; Papers
+              Study Zone
             </span>
             <motion.p
               initial={{ opacity: 0, y: 18 }}
