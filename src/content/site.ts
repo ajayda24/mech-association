@@ -36,7 +36,7 @@ export const navLinks = [
   { label: "About", href: "#about" },
   { label: "Execom", href: "#committee" },
   { label: "Events", href: "#events" },
-  { label: "Notes", href: "/notes" },
+  { label: "Study Zone", href: "/notes" },
   { label: "Alumni", href: "/alumni" },
 ] as const;
 
