@@ -27,8 +27,8 @@ export const supportHub = {
       body: "Team trials, university meets, arts fest entries and duty leave for events. Reach out before the deadline, not after.",
       contacts: [
         { name: "Gokul Vijay V", role: "Faculty", phone: "+91 95392 08465" },
-        { name: "Arun Mannanchery", phone: "+91 90729 03770" },
-        { name: "Fathima Sana", phone: "+91 97461 38236" },
+        { name: "Arun Mannanchery (Sports)", phone: "+91 90729 03770" },
+        { name: "Fathima Sana (Arts)", phone: "+91 97461 38236" },
       ],
       tone: "gilt",
     },
